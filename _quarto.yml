@@ -13,6 +13,10 @@ project:
     - assets/guide-lookup.js
     - assets/jd-mobile-shell.js
     - assets/fonts/
+    - assets/favicon.svg
+    - assets/favicon-32x32.png
+    - assets/apple-touch-icon.png
+    - assets/social/jurodo-guide-zh.png
     - CNAME
   post-render:
     - python3 scripts/build-search.py
@@ -23,6 +27,16 @@ lang: zh-CN
 website:
   title: "兽劳动"
   site-url: https://jurodo.carambi.com
+  open-graph:
+    locale: zh_CN
+    description: "按日期查阅 35 天的剧情选项与自由午休，查找结局、成就、CG 和标题页立绘的解锁方法。"
+    image: /assets/social/jurodo-guide-zh.png
+    image-alt: "《兽劳动》非官方玩家攻略，背景为夏日施工现场。"
+  twitter-card:
+    card-style: summary_large_image
+    description: "按日期查阅 35 天的剧情选项与自由午休，查找结局、成就、CG 和标题页立绘的解锁方法。"
+    image: /assets/social/jurodo-guide-zh.png
+    image-alt: "《兽劳动》非官方玩家攻略，背景为夏日施工现场。"
   search: false
   navbar:
     title: >-
@@ -70,7 +84,12 @@ format:
       - assets/guide.css
       - assets/jd-mobile-shell.css
       - assets/jd-discussion.css
-    include-in-header: assets/jd-discussion-config.html
+    include-in-header:
+      - assets/jd-discussion-config.html
+      - text: |
+          <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+          <link rel="icon" type="image/svg+xml" sizes="any" href="/assets/favicon.svg">
+          <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
     include-after-body:
       - assets/guide-search.html
       - assets/jd-discussion-remote.html
