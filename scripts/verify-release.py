@@ -1,3 +1,4 @@
+import hashlib
 """Validate and sanitize only the generated publication directory."""
 from collections import Counter
 from html.parser import HTMLParser
@@ -38,6 +39,14 @@ for p,h in pages.items():
     if t.count('class="jd-publication-footer"') != 1:errors.append(f'publication footer {p.name}')
     if 'class="jd-feedback-slot"' not in t or '__jdFeedbackDialog' not in t:errors.append(f'feedback entry/dialog {p.name}')
 
+    for name in ('jd-discussion.css', 'jd-feedback.css'):
+        css = OUT/'assets'/name
+        version = hashlib.sha256(css.read_bytes()).hexdigest()[:12]
+        expected_style = f"{css.stem}.{version}.css"
+        if expected_style not in t or f'/assets/{name}"' in t:
+            errors.append(f'unversioned discussion style {p.name}: {name}')
+        if not (css.parent/expected_style).exists() or (css.parent/expected_style).read_bytes() != css.read_bytes():
+            errors.append(f'discussion style content mismatch: {name}')
     if PRIVATE_PATH.search(t):errors.append(f'private local path {p.name}')
     for bad in ('chatgpt-conversation://','../research/','../reference/','__pwDiscussion','site: \'password\''):
         if bad in t:errors.append(f'private or wrong site marker {p.name}: {bad}')
