@@ -1,0 +1,153 @@
+<!-- Shared page context and transport boundary for Discussion and Feedback. -->
+<script>
+(() => {
+  'use strict';
+  if (window.__jdDiscussionRuntime) return;
+
+  const guideVersion = '1.3.0';
+  const pageKeys = Object.freeze({
+    "/guide/d8.html": "guide.week-2",
+    "/guide/d12.html": "guide.week-2",
+    "/guide/d26.html": "guide.week-4",
+    "/guide/d20-lunch.html": "guide.week-3",
+    "/guide/d15-lunch.html": "guide.week-3",
+    "/guide/d32.html": "guide.week-5",
+    "/guide/d22.html": "guide.week-4",
+    "/guide/d16.html": "guide.week-3",
+    "/guide/d33.html": "guide.week-5",
+    "/guide/d23.html": "guide.week-4",
+    "/guide/d17.html": "guide.week-3",
+    "/guide/d9.html": "guide.week-2",
+    "/guide/d13.html": "guide.week-2",
+    "/guide/d27.html": "guide.week-4",
+    "/guide/d2.html": "guide.week-1",
+    "/guide/d30-lunch.html": "guide.week-5",
+    "/guide/d18.html": "guide.week-3",
+    "/guide/d6.html": "guide.week-1",
+    "/guide/d28.html": "guide.week-4",
+    "/guide/d7.html": "guide.week-1",
+    "/guide/d26-lunch.html": "guide.week-4",
+    "/guide/d29.html": "guide.week-5",
+    "/guide/d27-lunch.html": "guide.week-4",
+    "/guide/d12-lunch.html": "guide.week-2",
+    "/guide/d13-lunch.html": "guide.week-2",
+    "/guide/d3.html": "guide.week-1",
+    "/guide/d19.html": "guide.week-3",
+    "/guide/d8-lunch.html": "guide.week-2",
+    "/guide/d9-lunch.html": "guide.week-2",
+    "/guide/d4.html": "guide.week-1",
+    "/guide/d2-lunch.html": "guide.week-1",
+    "/guide/d3-lunch.html": "guide.week-1",
+    "/guide/d16-lunch.html": "guide.week-3",
+    "/guide/d1.html": "guide.week-1",
+    "/guide/d29-lunch.html": "guide.week-5",
+    "/guide/d5.html": "guide.week-1",
+    "/guide/d11-lunch.html": "guide.week-2",
+    "/guide/d10-lunch.html": "guide.week-2",
+    "/guide/d30.html": "guide.week-5",
+    "/guide/d20.html": "guide.week-3",
+    "/guide/d14.html": "guide.week-2",
+    "/guide/d34.html": "guide.week-5",
+    "/guide/d10.html": "guide.week-2",
+    "/guide/d24.html": "guide.week-4",
+    "/guide/d24-lunch.html": "guide.week-4",
+    "/guide/d35.html": "guide.week-5",
+    "/guide/d11.html": "guide.week-2",
+    "/guide/d25.html": "guide.week-4",
+    "/guide/d5-lunch.html": "guide.week-1",
+    "/guide/d4-lunch.html": "guide.week-1",
+    "/guide/d31.html": "guide.week-5",
+    "/guide/d21.html": "guide.week-3",
+    "/guide/d32-lunch.html": "guide.week-5",
+    "/guide/d15.html": "guide.week-3",
+    "/guide/endings.html": "guide.endings",
+    "/guide/side-stories.html": "guide.side-stories",
+    "/mechanics/gp.html": "mechanics.gp",
+    "/mechanics/timeline.html": "mechanics.timeline",
+    "/collectibles/achievements.html": "collectibles.achievements",
+    "/collectibles/gallery.html": "collectibles.gallery"
+});
+  const weekTitles = Object.freeze({"guide.week-1": "第1周 · D1–D7", "guide.week-2": "第2周 · D8–D14", "guide.week-3": "第3周 · D15–D21", "guide.week-4": "第4周 · D22–D28", "guide.week-5": "第5周 · D29–D35"});
+  function decodeSource(hash, pageKey = getContext()?.pageKey) {
+    if (typeof hash !== 'string' || hash.length > 256) return null;
+    const match = /^#jd-source=(d[0-9]+(?:-lunch)?):(.*)$/.exec(hash);
+    if (!match) return null;
+    const path = '/guide/' + match[1] + '.html';
+    if (!pageKey || !weekTitles[pageKey] || pageKeys[path] !== pageKey) return null;
+    let anchor;
+    try { anchor = decodeURIComponent(match[2]); } catch { return null; }
+    if (anchor && !/^[\p{L}\p{N}_.:-]+$/u.test(anchor)) return null;
+    return Object.freeze({ href: path + (anchor ? '#' + encodeURIComponent(anchor) : ''),
+      label: '来源 D' + Number(match[1].match(/^d(\d+)/)[1]) + (match[1].endsWith('-lunch') ? ' 午休' : '') + (anchor ? ' · 对应段落' : '') });
+  }
+  function getCommentPageHash() {
+    const context = getContext();
+    const hash = getSectionHash();
+    if (!weekTitles[context?.pageKey]) return hash;
+    const slug = context.pagePath.match(/^\/guide\/(d[0-9]+(?:-lunch)?)\.html$/)?.[1];
+    if (!slug) return '';
+    let anchor = '';
+    try { anchor = hash ? decodeURIComponent(hash.slice(1)) : ''; } catch {}
+    const value = '#jd-source=' + slug + ':' + encodeURIComponent(anchor);
+    return value.length <= 256 && decodeSource(value, context.pageKey) ? value : '#jd-source=' + slug + ':';
+  }
+  function getReference(hash) {
+    const context = getContext();
+    if (weekTitles[context?.pageKey]) return decodeSource(hash, context.pageKey);
+    if (typeof hash !== 'string' || !/^#[^?#]{1,255}$/.test(hash) || hash.startsWith('#jd-source=')) return null;
+    return {href: context.pagePath + hash, label: '对应段落'};
+  }
+
+  // Only existing anchors in guide prose can become a new comment's section link.
+  // Discussion links and shell controls must never be stored as pageHash.
+  function getSectionHash() {
+    const hash = location.hash;
+    if (!hash || Array.from(hash).length > 256 || /[?#]/.test(hash.slice(1))) return '';
+    let id;
+    try { id = decodeURIComponent(hash.slice(1)); } catch { return ''; }
+    if (/^(?:[0-9a-f]{8}-[0-9a-f-]{27}|(?:jd|pw|dw|kt)-comment-|discussion|quarto|toc-|title-block|fn(?:ref)?[-\d])/i.test(id)) return '';
+    const main = document.querySelector('#quarto-content > main#quarto-document-content');
+    const target = document.getElementById(id);
+    if (!target || !main?.contains(target) || target === main ||
+        target.closest('header, footer, nav, aside, form, dialog, .quarto-title-block, .quarto-title, .footnotes, [role="doc-endnotes"], #jd-discussion-hub') ||
+        !target.matches('section[id], h2[id], h3[id], h4[id], h5[id], h6[id], p[id], li[id], blockquote[id], table[id], figure[id], details[id], div.choice-row[id], div.event-record[id], span.lookup-name[id]')) return '';
+    return hash;
+  }
+
+  function getContext() {
+    const locale = document.documentElement.lang;
+    if (locale !== 'zh-CN') return null;
+    const pagePath = location.pathname;
+    if ((locale === 'en') !== pagePath.startsWith('/en/')) return null;
+    return Object.freeze({
+      site: 'jurodo',
+      locale,
+      pageKey: Object.hasOwn(pageKeys, pagePath) ? pageKeys[pagePath] : null,
+      guideVersion,
+      pagePath,
+      pageHash: location.hash,
+      viewportClass: matchMedia('(min-width: 768px)').matches ? 'desktop' : 'mobile',
+    });
+  }
+
+  const localHost = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+  const stagingHost = false;
+  const productionHost = location.hostname === 'jurodo.carambi.com';
+  const transport = localHost ? window.__jdDiscussionFixtureTransport ?? null :
+    (stagingHost || productionHost) ? window.__jdDiscussionRemoteTransport ?? null : null;
+  window.__jdDiscussionRuntime = Object.freeze({
+    getContext, getCommentPageHash, getReference, decodeSource, weekTitles, pageKeys, transport, mode: transport ?
+      (localHost ? 'fixture' : stagingHost ? 'staging' : 'production') : 'inactive',
+  });
+  const context = getContext();
+  if (!context?.pageKey) return;
+  const main = document.querySelector('#quarto-content > main#quarto-document-content');
+  if (!main || document.getElementById('jd-public-discussion')) return;
+  const mount = document.createElement('div');
+  mount.id = 'jd-public-discussion';
+  mount.hidden = true;
+  mount.setAttribute('data-jd-discussion-mount', '');
+  mount.dataset.pageKey = context.pageKey;
+  main.after(mount);
+})();
+</script>

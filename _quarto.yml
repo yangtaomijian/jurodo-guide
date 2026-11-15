@@ -1,0 +1,80 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.md
+    - discussions.md
+    - guide/*.md
+    - mechanics/timeline.md
+    - mechanics/gp.md
+    - collectibles/achievements.md
+    - collectibles/gallery.md
+  resources:
+    - assets/guide-lookup.js
+    - assets/jd-mobile-shell.js
+    - assets/fonts/
+    - CNAME
+  post-render:
+    - python3 scripts/build-search.py
+    - python3 scripts/finalize-publication.py
+    - python3 scripts/verify-release.py
+
+lang: zh-CN
+website:
+  title: "兽劳动"
+  site-url: https://jurodo.carambi.com
+  search: false
+  navbar:
+    title: >-
+      <span class="kt-brand-name">兽劳动</span>
+      <span class="kt-brand-edition" aria-hidden="true">攻略 · 1.3.0</span>
+    pinned: true
+    collapse: false
+    left:
+      - text: 首页
+        href: index.md
+      - text: 日期
+        href: guide/index.md
+      - text: 结局
+        href: guide/endings.md
+      - text: 收集
+        menu:
+          - text: 成就
+            href: collectibles/achievements.md
+          - text: 图库
+            href: collectibles/gallery.md
+      - text: 机制
+        menu:
+          - text: 时间线
+            href: mechanics/timeline.md
+          - text: GP
+            href: mechanics/gp.md
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-title: 本页目录
+    grid:
+      sidebar-width: 190px
+      body-width: 940px
+      margin-width: 165px
+      gutter-width: 22px
+    theme:
+      light: [default]
+      dark: [default, assets/kt-dark.scss]
+    respect-user-color-scheme: true
+    css:
+      - assets/kt-foundation.css
+      - assets/kt-publication.css
+      - assets/guide.css
+      - assets/jd-mobile-shell.css
+      - assets/jd-discussion.css
+    include-in-header: assets/jd-discussion-config.html
+    include-after-body:
+      - assets/guide-search.html
+      - assets/jd-discussion-remote.html
+      - assets/jd-discussion-runtime.html
+      - assets/jd-discussion-ui.html
+      - assets/jd-discussion-hub.html
+    anchor-sections: false

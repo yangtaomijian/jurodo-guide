@@ -1,0 +1,23 @@
+<button id="guide-theme-auto" class="guide-nav-tool" type="button" aria-label="自动跟随系统外观" title="跟随系统外观" aria-pressed="false" hidden>自动</button>
+<button id="kt-search-launcher" class="guide-nav-tool" type="button" aria-haspopup="dialog" aria-controls="kt-search-dialog" aria-label="全站搜索" title="全站搜索" hidden>
+  <i class="bi bi-search" aria-hidden="true"></i>
+</button>
+<dialog id="kt-search-dialog" aria-label="全站搜索">
+  <form id="kt-search-form" class="kt-search-head" role="search">
+    <label class="visually-hidden" for="kt-search-input">全站搜索</label>
+    <input id="kt-search-input" type="search" autocomplete="off" enterkeyhint="search" placeholder="选项、日期、成就或图库名" aria-controls="kt-search-results">
+    <button id="kt-search-close" type="button">关闭</button>
+  </form>
+  <p id="kt-search-status" role="status"></p>
+  <ul id="kt-search-results"></ul>
+</dialog>
+<div id="achievement-preview" role="tooltip" hidden>
+  <strong></strong>
+  <small></small>
+  <p class="achievement-preview-trigger"></p>
+  <p class="achievement-preview-replay"></p>
+  <span class="achievement-preview-touch" hidden></span>
+</div>
+<script src="/assets/guide-lookup.js" defer></script>
+
+<script src="/assets/jd-mobile-shell.js" defer></script>

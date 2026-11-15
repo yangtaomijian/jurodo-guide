@@ -1,0 +1,1239 @@
+<!-- Discussion UI. The runtime activates it on supported hosts only. -->
+<script>
+(() => {
+  'use strict';
+  const runtime = window.__jdDiscussionRuntime;
+  const context = runtime?.getContext();
+  const mount = document.getElementById('jd-public-discussion');
+  if (!mount || !context?.pageKey || !['fixture', 'staging', 'production'].includes(runtime.mode) || !runtime.transport) return;
+
+  const words = context.locale === 'en' ? {
+    title: 'Discussion', explainer: 'Public comments and replies about this guide page.',
+    current: 'Current guide version', empty: 'No comments for this guide version yet.',
+    locked: 'This discussion is locked. Existing comments remain available.', guest: 'Guest',
+    maintainer: 'Maintainer', pinned: 'Pinned', hidden: 'This comment was hidden by the maintainer.',
+    deleted: 'This comment was deleted.', fragment: 'Referenced section', earlier: 'Earlier guide versions',
+    loadMore: 'Load more', loading: 'Loading discussion…', error: 'Couldn’t load the discussion.',
+    retry: 'Try again', count: number => `${number} ${number === 1 ? 'comment' : 'comments'}`,
+    replies: 'Replies', persistent: 'Persistent discussions', persistentNote: 'Kept across guide versions by the maintainer.', all: 'View all discussions', original: 'Original guide version', missing: 'This comment is unavailable.',
+    add: 'Add a comment', reply: 'Reply', report: 'Report', name: 'Name (optional)', body: 'Comment',
+    identity: 'No account required. Names are not verified.', rootSubmit: 'Post comment',
+    replySubmit: 'Post reply', cancel: 'Cancel', posting: 'Posting…',
+    rootSuccess: 'Comment posted.', replySuccess: 'Reply posted.',
+    emptyBody: 'Enter a comment.', nameLong: 'Name must be 40 characters or fewer.',
+    bodyLong: 'Comment must be 2,000 characters or fewer.',
+    badHash: 'This section link is too long.', badName: 'Choose another name.',
+    verifyWait: 'Complete verification before posting.',
+    verifyLoad: 'Verification couldn’t load. Please try again.',
+    verifyFailed: 'Verification failed. Please try again.',
+    rateLimited: 'You’re posting too quickly. Please wait and try again.',
+    postFailed: 'Couldn’t post your comment. Your draft is still here — please try again.',
+    postLocked: 'This discussion is locked. Your draft is still here.',
+    refreshFailed: 'Your comment was posted, but the discussion couldn’t refresh. Reload the page to see it.',
+    verifyRetry: 'Try verification again', refresh: 'Refresh', refreshing: 'Refreshing…',
+    reloadFailed: 'Couldn’t refresh the discussion. Existing comments and your draft are still here. Try again.',
+    postUnknown: 'Posting result is uncertain. Your draft is still here. Refresh and check for your comment before posting again.',
+    confirmUnposted: 'I checked; it was not posted',
+    replyTo: name => `Reply to ${name}`, replyingTo: name => `Replying to ${name}`,
+    replyHidden: 'Reply to a hidden comment', replyDeleted: 'Reply to a deleted comment',
+    replyMissing: 'Reply to an unavailable comment',
+    replyUnavailable: 'This reply target is no longer available. Your draft is still here. Refresh to check its status.',
+  } : {
+    title: '讨论', explainer: '关于本页内容的公开评论与回复。',
+    current: '当前攻略版本', empty: '这个攻略版本还没有评论。',
+    locked: '此讨论已锁定；现有评论仍可查看。', guest: '访客',
+    maintainer: '维护者', pinned: '置顶', hidden: '此评论已由维护者隐藏。',
+    deleted: '此评论已删除。', fragment: '对应段落', earlier: '较早的攻略版本',
+    loadMore: '加载更多', loading: '正在加载讨论…', error: '无法加载讨论。',
+    retry: '重试', count: number => `${number} 条评论`, replies: '回复', persistent: '长期讨论', persistentNote: '由维护者保留，跨攻略版本显示。', all: '查看全站讨论', original: '最初攻略版本', missing: '此评论当前不可用。',
+    add: '发表评论', reply: '回复', report: '举报', name: '昵称（可选）', body: '评论',
+    identity: '无需账号；昵称不会验证身份。', rootSubmit: '发表评论',
+    replySubmit: '发布回复', cancel: '取消', posting: '正在发布…',
+    rootSuccess: '评论已发布。', replySuccess: '回复已发布。',
+    emptyBody: '请输入评论内容。', nameLong: '昵称不能超过 40 个字符。',
+    bodyLong: '评论不能超过 2,000 个字符。',
+    badHash: '对应段落链接过长。', badName: '请使用其他昵称。',
+    verifyWait: '请先完成验证，再发布评论。',
+    verifyLoad: '验证组件无法加载，请重试。',
+    verifyFailed: '验证失败，请重试。',
+    rateLimited: '提交过于频繁，请稍后再试。',
+    postFailed: '评论未能发布。草稿仍然保留，请重试。',
+    postLocked: '此讨论已锁定；你的草稿仍然保留。',
+    refreshFailed: '评论已发布，但讨论区未能刷新。重新加载页面即可查看。',
+    verifyRetry: '重试验证', refresh: '刷新', refreshing: '正在刷新…',
+    reloadFailed: '讨论刷新失败；已有评论和草稿仍然保留，请重试。',
+    postUnknown: '发布结果不确定，草稿仍然保留。请先刷新核对评论是否已发布，再决定是否重新提交。',
+    confirmUnposted: '已核对，确认未发布',
+    replyTo: name => `回复 ${name}`, replyingTo: name => `正在回复 ${name}`,
+    replyHidden: '回复已隐藏的评论', replyDeleted: '回复已删除的评论',
+    replyMissing: '回复当前不可用的评论',
+    replyUnavailable: '当前回复对象已不可用，草稿仍然保留。请刷新核对其状态。',
+  };
+  const reactionWords = context.locale === 'en' ? {
+    label: 'Emoji reactions', add: 'Add a reaction', choices: 'Choose a reaction', selected: 'selected',
+    loading: 'Loading reactions…', failed: 'Reactions couldn’t load. Try again.',
+    writeFailed: 'Reaction couldn’t be saved. Try again.', rate: 'Too many reactions. Wait a moment and try again.',
+    unknown: 'Reaction result is uncertain. Check its current state before trying again.',
+    storage: 'Reactions are read-only because browser storage is unavailable.', retry: 'Refresh reactions',
+    names: { like: 'Helpful', heart: 'Thanks', smile: 'Happy', celebrate: 'Celebrate', thinking: 'Thinking', sad: 'Sad / Sympathy' },
+  } : {
+    label: '表情反应', add: '添加表情反应', choices: '选择表情', selected: '已选',
+    loading: '正在读取表情…', failed: '表情读取失败，请重试。', writeFailed: '表情未能保存，请重试。',
+    rate: '表情操作过于频繁，请稍后再试。', unknown: '表情操作结果不确定，请先核对当前状态再操作。',
+    storage: '浏览器存储不可用，表情仅供查看。', retry: '刷新表情',
+    names: { like: '赞同、有帮助', heart: '喜欢、感谢', smile: '开心、友善', celebrate: '庆祝', thinking: '思考、保留意见', sad: '难过、共情' },
+  };
+  const subscriptionWords = context.locale === 'en' ? {
+    optIn: 'Email me when someone replies directly to this comment', email: 'Email (private)',
+    help: 'Optional and private. Verify within 24 hours; the subscription lasts 365 days after verification. The first subscription email cannot be changed. Cancel from any subscription email. This choice stays only in this tab.',
+    title: 'Email updates for your posted comment', sending: 'Your comment is posted. Requesting a verification email…',
+    invalid: 'Your comment is posted. Enter a valid email to request verification; do not post again.',
+    unavailable: 'Your comment is posted. Email subscriptions are unavailable. You can retry only the subscription.',
+    failed: 'The verification email request failed. Your comment is already posted.',
+    rate: 'Too many email requests. Wait before retrying the subscription; your comment is posted.',
+    fixed: 'The subscription email is fixed and cannot be replaced. Check its status.',
+    unknown: 'The email request result is uncertain. Check its status before retrying. Your comment is already posted.',
+    statusFailed: 'Couldn’t check the private subscription status. Try checking again; do not repost your comment.',
+    noProof: 'Your comment is posted, but email updates could not be linked to it. Do not repost your comment.',
+    retry: 'Request verification email', check: 'Check subscription status', checking: 'Checking subscription status…',
+    states: {
+      not_requested: 'No verification email has been requested. Your comment is already posted.',
+      verification_pending: 'The email service accepted the verification request. Delivery is not confirmed; the subscription is not active until you verify.',
+      verification_failed: 'The verification email request failed. Your comment is already posted.',
+      verification_unknown: 'The email request result is uncertain. Check its status before retrying; do not repost your comment.',
+      active: 'Email verified. You are subscribed to direct replies to this comment. Cancel using the link in a subscription email.',
+      cancelled: 'This email subscription was cancelled and cannot be restarted for this comment.',
+      expired: 'This email subscription expired and cannot be restarted for this comment.',
+    },
+  } : {
+    optIn: '有人直接回复这条评论时，通过邮件通知我', email: '邮箱（仅私下使用）',
+    help: '可选，邮箱不会公开。须在 24 小时内验证，验证后有效 365 天；首次订阅邮箱不能更换，可随时通过邮件退订。此选择仅保留在当前标签页。',
+    title: '已发布评论的邮件订阅', sending: '评论已发布，正在请求验证邮件…',
+    invalid: '评论已发布。请输入有效邮箱来请求验证，无需再次发表评论。',
+    unavailable: '评论已发布，邮件订阅暂不可用。可以只重试订阅。',
+    failed: '验证邮件请求失败；评论已经发布。', rate: '邮件请求过于频繁，请稍后只重试订阅；评论已经发布。',
+    fixed: '订阅邮箱已固定，不能更换。请核对订阅状态。',
+    unknown: '邮件请求结果不确定。请先核对订阅状态，再决定是否重试；评论已经发布。',
+    statusFailed: '无法核对私有订阅状态，请再次核对；无需重新发表评论。',
+    noProof: '评论已发布，但邮件订阅无法关联到这条评论。无需重新发表评论。',
+    retry: '请求验证邮件', check: '核对订阅状态', checking: '正在核对订阅状态…',
+    states: {
+      not_requested: '尚未请求验证邮件；评论已经发布。',
+      verification_pending: '邮件服务已接受验证请求，尚不能确认送达；验证邮箱后订阅才会生效。',
+      verification_failed: '验证邮件请求失败；评论已经发布。',
+      verification_unknown: '邮件请求结果不确定，请先核对订阅状态；无需重新发表评论。',
+      active: '邮箱已验证，将通知你对这条评论的直接回复。可通过订阅邮件中的链接退订。',
+      cancelled: '此邮件订阅已取消，不能为这条评论重新订阅。', expired: '此邮件订阅已过期，不能为这条评论重新订阅。',
+    },
+  };
+  const dateFormat = new Intl.DateTimeFormat(context.locale, {
+    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+  const make = (tag, className, value) => {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (value !== undefined) element.textContent = value;
+    return element;
+  };
+
+  const section = make('section', 'jd-discussion');
+  section.setAttribute('aria-labelledby', 'jd-discussion-title');
+  const heading = make('h2', '', runtime.weekTitles?.[context.pageKey] ? runtime.weekTitles[context.pageKey] + '讨论' : words.title);
+  heading.id = 'jd-discussion-title';
+  const headingRow = make('div', 'jd-discussion-heading');
+  const hubLink = make('a', 'jd-discussion-hub-link', words.all);
+  hubLink.href = (context.locale === 'en' ? '/en/' : '/') + 'discussions.html';
+  const refresh = make('button', 'jd-discussion-action jd-discussion-refresh', words.refresh);
+  refresh.type = 'button';
+  headingRow.append(heading, refresh, hubLink);
+  const explainer = make('p', 'jd-discussion-explainer', runtime.weekTitles?.[context.pageKey] ? '本周每日与午休共用讨论，可能涉及本周后续剧情。' : words.explainer);
+  const versionContext = make('p', 'jd-discussion-version', `${words.current} · ${context.guideVersion}`);
+  const status = make('div', 'jd-discussion-status');
+  status.setAttribute('role', 'status');
+  status.setAttribute('aria-live', 'polite');
+  const postNotice = make('div', 'jd-discussion-post-notice');
+  postNotice.setAttribute('role', 'status');
+  postNotice.setAttribute('aria-live', 'polite');
+  postNotice.tabIndex = -1;
+  const subscriptionResults = make('div', 'jd-discussion-subscription-results');
+  const lockedNotice = make('p', 'jd-discussion-locked', words.locked);
+  lockedNotice.hidden = true;
+  const rootAction = make('button', 'jd-discussion-action jd-discussion-add', words.add);
+  rootAction.type = 'button'; rootAction.hidden = true;
+  const composerHost = make('div', 'jd-discussion-composer-host');
+  composerHost.hidden = true;
+  const comments = make('div', 'jd-discussion-comments');
+  const more = make('button', 'jd-discussion-action', words.loadMore);
+  more.type = 'button'; more.hidden = true;
+  const versions = make('section', 'jd-discussion-versions');
+  versions.hidden = true;
+  const versionsTitle = make('h3', '', words.earlier);
+  const versionButtons = make('div', 'jd-discussion-version-buttons');
+  versions.append(versionsTitle, versionButtons);
+  const persistent = make('section', 'jd-discussion-persistent'); persistent.hidden = true;
+  const persistentHeading = make('h3', '', words.persistent);
+  const persistentNote = make('p', 'jd-discussion-explainer', words.persistentNote);
+  const persistentComments = make('div', 'jd-discussion-persistent-comments');
+  const persistentMore = make('button', 'jd-discussion-action', words.loadMore);
+  persistentMore.type = 'button'; persistentMore.hidden = true;
+  persistent.append(persistentHeading, persistentNote, persistentComments, persistentMore);
+  section.append(headingRow, explainer, persistent, versionContext, status, postNotice, subscriptionResults, lockedNotice,
+    rootAction, composerHost, comments, more, versions);
+  mount.append(section);
+  mount.hidden = false;
+
+  const remoteMode = runtime.mode === 'staging' || runtime.mode === 'production';
+  const writeEnabled = (remoteMode || (runtime.mode === 'fixture' && runtime.transport.fixtureCanWrite === true)) && typeof runtime.transport.postComment === 'function';
+  const subscriptionEnabled = writeEnabled && typeof runtime.transport.enrollSubscription === 'function' &&
+    typeof runtime.transport.readSubscriptionStatus === 'function';
+  const reportEnabled = (remoteMode || (runtime.mode === 'fixture' && runtime.transport.fixtureCanWrite === true)) && typeof runtime.transport.sendFeedback === 'function';
+  const state = { persistent: null, activeVersion: context.guideVersion, pages: new Map(), index: [], pending: false,
+    drafts: new Map(), uncertainTargets: new Set(), activeTarget: null, activeReplyRootId: null, replyUnavailable: false, opener: null, posting: false, threadLocked: false };
+  const requestFor = (guideVersion, cursor = null, section = 'current') => ({
+    site: context.site, locale: context.locale, pageKey: context.pageKey, guideVersion, cursor, section,
+  });
+  const read = async (guideVersion, cursor, section = 'current') => {
+    const response = await runtime.transport.readDiscussion(requestFor(guideVersion, cursor, section));
+    if (response?.ok !== true || !response.thread || !Array.isArray(response.currentVersion?.comments) ||
+        response.currentVersion.guideVersion !== guideVersion || !Array.isArray(response.earlierVersions)) {
+      throw Error('INVALID_DISCUSSION_RESPONSE');
+    }
+    return response;
+  };
+  // Reactions have their own cache, identity and errors. They never reject comment operations.
+  const reactionProtocol = runtime.transport.reactionVersion === 2 ? { reactionVersion: 2 } : {};
+  const reactionTypes = ['like', 'heart', 'smile', 'celebrate', 'thinking', ...(reactionProtocol.reactionVersion === 2 ? ['sad'] : [])];
+  const reactionEmoji = { like: '👍', heart: '❤️', smile: '😄', celebrate: '🎉', thinking: '🤔', sad: '😢' };
+  const reactionReadEnabled = typeof runtime.transport.readReactions === 'function';
+  const reactionWriteEnabled = reactionReadEnabled && typeof runtime.transport.setReaction === 'function';
+  const visitorStorageKey = 'carambi.jurodo.reactionVisitorId';
+  const reactionCache = new Map();
+  // Epoch is only for view/identity changes; each comment independently owns its latest read token.
+  let reactionEpoch = 0, reactionReadSerial = 0, reactionScheduled = false, reactionMenuId = null;
+  let reactionVisitor, reactionStorageAvailable = false;
+  const reactionEntry = id => {
+    if (!reactionCache.has(id)) reactionCache.set(id, { data: null, pending: false, unknown: false,
+      error: '', revision: 0, readToken: null });
+    return reactionCache.get(id);
+  };
+  function visitorId() {
+    let id = null;
+    try {
+      id = localStorage.getItem(visitorStorageKey);
+      if (!/^[0-9a-f]{64}$/.test(id ?? '')) {
+        const bytes = new Uint8Array(32); crypto.getRandomValues(bytes);
+        id = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+        localStorage.setItem(visitorStorageKey, id);
+        if (localStorage.getItem(visitorStorageKey) !== id) throw Error('STORAGE_UNAVAILABLE');
+      }
+      reactionStorageAvailable = true;
+    } catch { id = null; reactionStorageAvailable = false; }
+    if (id !== reactionVisitor) {
+      reactionVisitor = id; reactionEpoch++;
+      for (const entry of reactionCache.values()) {
+        // Keep public counts; selected/eligibility belong to the current stored identity.
+        if (entry.data) entry.data = { ...entry.data, selected: [], canReact: false };
+        entry.revision++; entry.unknown = false;
+      }
+    }
+    return id;
+  }
+  function validReaction(row) {
+    return row && typeof row.commentId === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(row.commentId) &&
+      typeof row.canReact === 'boolean' && row.counts && Object.keys(row.counts).length === reactionTypes.length &&
+      reactionTypes.every(type => Number.isSafeInteger(row.counts[type]) && row.counts[type] >= 0) &&
+      Array.isArray(row.selected) && new Set(row.selected).size === row.selected.length &&
+      row.selected.every(type => reactionTypes.includes(type));
+  }
+  function reactionIds() {
+    return [...section.querySelectorAll('.jd-discussion-reactions')].map(panel => panel.dataset.commentId);
+  }
+  function closeReactionMenu(restoreFocus = false) {
+    const id = reactionMenuId; reactionMenuId = null;
+    if (!id) return;
+    updateReactionPanels(id);
+    if (restoreFocus) section.querySelector(`.jd-discussion-reactions[data-comment-id="${id}"] .jd-discussion-reaction-add`)?.focus({ preventScroll: true });
+  }
+  function reactionPanel(id) {
+    const panel = make('div', 'jd-discussion-reactions');
+    panel.dataset.commentId = id;
+    panel.setAttribute('role', 'group'); panel.setAttribute('aria-label', reactionWords.label);
+    fillReactionPanel(panel);
+    return panel;
+  }
+  function fillReactionPanel(panel) {
+    const id = panel.dataset.commentId, entry = reactionEntry(id), data = entry.data;
+    const focus = panel.contains(document.activeElement) ? document.activeElement : null;
+    const desiredFocus = focus?.dataset.reactionType || (focus?.classList.contains('jd-discussion-reaction-add') ? 'add' : focus?.classList.contains('jd-discussion-reaction-retry') ? 'retry' : null) || (document.activeElement === panel ? panel.dataset.focusControl : null);
+    delete panel.dataset.focusControl;
+    panel.replaceChildren();
+    panel.setAttribute('aria-busy', String(entry.pending || entry.readToken !== null));
+    const disabled = !reactionWriteEnabled || !reactionStorageAvailable || data?.canReact !== true || entry.pending || entry.unknown || entry.readToken !== null;
+    const chips = make('div', 'jd-discussion-reaction-chips');
+    function button(type, menu) {
+      const selected = data?.selected.includes(type) === true;
+      const count = data?.counts[type] ?? 0;
+      const node = make('button', 'jd-discussion-reaction', `${reactionEmoji[type]}${menu ? '' : ` ${count}`}${selected ? ' ✓' : ''}`);
+      node.type = 'button'; node.dataset.reactionType = type;
+      node.setAttribute('aria-pressed', String(selected));
+      node.setAttribute('aria-label', `${reactionWords.names[type]} · ${count}${selected ? ` · ${reactionWords.selected}` : ''}`);
+      node.disabled = disabled;
+      node.addEventListener('click', () => {
+        // Touch browsers need explicit focus before the pending panel replaces the button.
+        node.focus({ preventScroll: true }); changeReaction(id, type);
+      });
+      return node;
+    }
+    for (const type of reactionTypes) if ((data?.counts[type] ?? 0) > 0) chips.append(button(type, false));
+    const add = make('button', 'jd-discussion-reaction-add', '＋'); add.type = 'button';
+    add.setAttribute('aria-label', reactionWords.add); add.setAttribute('aria-expanded', String(reactionMenuId === id));
+    add.setAttribute('aria-controls', `jd-reaction-menu-${id}`); add.disabled = disabled;
+    add.addEventListener('click', () => {
+      if (reactionMenuId === id) { closeReactionMenu(true); return; }
+      closeReactionMenu(); reactionMenuId = id; updateReactionPanels(id);
+      section.querySelector(`#jd-reaction-menu-${id} button`)?.focus({ preventScroll: true });
+    });
+    chips.append(add); panel.append(chips);
+    const menu = make('div', 'jd-discussion-reaction-menu'); menu.id = `jd-reaction-menu-${id}`;
+    menu.setAttribute('role', 'group'); menu.setAttribute('aria-label', reactionWords.choices); menu.hidden = reactionMenuId !== id;
+    for (const type of reactionTypes) menu.append(button(type, true));
+    menu.addEventListener('keydown', event => {
+      const buttons = [...menu.querySelectorAll('button')]; const index = buttons.indexOf(document.activeElement);
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? 4 :
+        ['ArrowRight', 'ArrowDown'].includes(event.key) ? (index + 1) % 5 :
+        ['ArrowLeft', 'ArrowUp'].includes(event.key) ? (index + 4) % 5 : null;
+      if (next !== null) { event.preventDefault(); buttons[next].focus(); }
+    });
+    panel.append(menu);
+    const notice = make('div', 'jd-discussion-reaction-status'); notice.setAttribute('role', 'status'); notice.setAttribute('aria-live', 'polite');
+    const text = entry.unknown ? reactionWords.unknown : entry.error || (!reactionStorageAvailable ? reactionWords.storage : !data ? reactionWords.loading : '');
+    if (text) notice.append(make('span', '', text));
+    if (entry.error || entry.unknown || !reactionStorageAvailable) {
+      const retry = make('button', 'jd-discussion-reaction-retry', reactionWords.retry); retry.type = 'button';
+      retry.disabled = entry.pending || entry.readToken !== null;
+      retry.addEventListener('click', () => readReactions([id])); notice.append(retry);
+    }
+    panel.append(notice);
+    if (!menu.hidden) { positionReactionMenu(); queueMicrotask(positionReactionMenu); }
+    if (desiredFocus) {
+      const selector = desiredFocus === 'add' ? '.jd-discussion-reaction-add' : desiredFocus === 'retry' ? '.jd-discussion-reaction-retry' : `${reactionMenuId === id ? '.jd-discussion-reaction-menu' : '.jd-discussion-reaction-chips'} [data-reaction-type="${desiredFocus}"]`;
+      const control = panel.querySelector(selector) || add;
+      if (!control.disabled) control.focus({ preventScroll: true });
+      else { panel.tabIndex = -1; panel.dataset.focusControl = desiredFocus; panel.focus({ preventScroll: true }); }
+    }
+  }
+  // Only geometry: keep the picker near + without growing or clipping the comment tree.
+  function positionReactionMenu() {
+    if (!reactionMenuId) return;
+    const panel = section.querySelector(`.jd-discussion-reactions[data-comment-id="${reactionMenuId}"]`);
+    const add = panel?.querySelector('.jd-discussion-reaction-add');
+    const menu = panel?.querySelector('.jd-discussion-reaction-menu');
+    if (!add?.isConnected || !menu || menu.hidden) return;
+    const viewport = window.visualViewport;
+    const leftEdge = (viewport?.offsetLeft ?? 0) + 8, topEdge = (viewport?.offsetTop ?? 0) + 8;
+    const rightEdge = leftEdge + (viewport?.width ?? innerWidth) - 16;
+    const bottomEdge = topEdge + (viewport?.height ?? innerHeight) - 16;
+    menu.style.maxWidth = `${Math.max(44, rightEdge - leftEdge)}px`;
+    const anchor = add.getBoundingClientRect(), bounds = menu.getBoundingClientRect();
+    const toolbar = panel.closest('.jd-discussion-actions')?.getBoundingClientRect() ?? anchor;
+    const below = Math.max(anchor.bottom, toolbar.bottom) + 6;
+    const top = below + bounds.height <= bottomEdge ? below : Math.min(anchor.top, toolbar.top) - bounds.height - 6;
+    menu.style.left = `${Math.max(leftEdge, Math.min(anchor.left, rightEdge - bounds.width))}px`;
+    menu.style.top = `${Math.max(topEdge, Math.min(top, bottomEdge - bounds.height))}px`;
+  }
+  window.addEventListener('scroll', positionReactionMenu, true);
+  window.addEventListener('resize', positionReactionMenu);
+  window.visualViewport?.addEventListener('resize', positionReactionMenu);
+  window.visualViewport?.addEventListener('scroll', positionReactionMenu);
+  function updateReactionPanels(id) {
+    section.querySelectorAll('.jd-discussion-reactions').forEach(panel => {
+      if (!id || panel.dataset.commentId === id) fillReactionPanel(panel);
+    });
+  }
+  async function readReactions(ids = reactionIds()) {
+    if (!reactionReadEnabled) return;
+    const visitor = visitorId(), generation = reactionEpoch;
+    const token = ++reactionReadSerial;
+    ids = [...new Set(ids)].filter(id => !reactionEntry(id).pending);
+    const batches = []; for (let offset = 0; offset < ids.length; offset += 50) batches.push(ids.slice(offset, offset + 50));
+    await Promise.all(batches.map(async commentIds => {
+      const revisions = new Map(commentIds.map(id => [id, reactionEntry(id).revision]));
+      commentIds.forEach(id => { reactionEntry(id).readToken = token; }); updateReactionPanels();
+      try {
+        const request = { ...reactionProtocol, pageKey: context.pageKey, locale: context.locale, commentIds };
+        if (visitor) request.visitorId = visitor;
+        const response = await runtime.transport.readReactions(request);
+        if (response?.ok !== true || !Array.isArray(response.reactions) || response.reactions.length !== commentIds.length ||
+            new Set(response.reactions.map(row => row?.commentId)).size !== commentIds.length ||
+            !response.reactions.every(row => validReaction(row) && commentIds.includes(row.commentId))) throw Error('INVALID_REACTIONS');
+        if (generation !== reactionEpoch || visitor !== reactionVisitor) return;
+        for (const row of response.reactions) {
+          const entry = reactionEntry(row.commentId);
+          if (entry.pending || entry.readToken !== token || entry.revision !== revisions.get(row.commentId)) continue;
+          entry.data = { commentId: row.commentId, counts: { ...row.counts }, selected: [...row.selected], canReact: row.canReact };
+          entry.error = ''; entry.unknown = false;
+        }
+      } catch {
+        if (generation === reactionEpoch) for (const id of commentIds) {
+          const entry = reactionEntry(id);
+          if (!entry.pending && entry.readToken === token && entry.revision === revisions.get(id)) entry.error = reactionWords.failed;
+        }
+      } finally {
+        commentIds.forEach(id => { const entry = reactionEntry(id); if (entry.readToken === token) {
+          entry.readToken = null;
+          if (!entry.data && generation !== reactionEpoch && !entry.error) entry.error = reactionWords.failed;
+        } });
+        updateReactionPanels();
+      }
+    }));
+  }
+  function scheduleReactions() {
+    if (!reactionReadEnabled || reactionScheduled) return;
+    reactionScheduled = true;
+    queueMicrotask(() => { reactionScheduled = false; readReactions(); });
+  }
+  async function changeReaction(id, type) {
+    const entry = reactionEntry(id), previousVisitor = reactionVisitor, visitor = visitorId();
+    if (visitor !== previousVisitor) { await readReactions([id]); return; }
+    if (!visitor || !reactionWriteEnabled || entry.data?.canReact !== true || entry.pending || entry.unknown || entry.readToken !== null) {
+      updateReactionPanels(id); return;
+    }
+    const intent = entry.data.selected.includes(type) ? 'remove' : 'add';
+    entry.pending = true; entry.error = ''; const revision = ++entry.revision; const generation = reactionEpoch;
+    closeReactionMenu(); updateReactionPanels(id);
+    try {
+      const response = await runtime.transport.setReaction({ ...reactionProtocol, pageKey: context.pageKey, locale: context.locale, commentId: id, type, visitorId: visitor, intent });
+      if (response?.ok !== true || !validReaction(response.reaction) || response.reaction.commentId !== id) throw Error('INVALID_REACTION');
+      if (entry.revision === revision && visitor === reactionVisitor) {
+        entry.data = { commentId: id, counts: { ...response.reaction.counts }, selected: [...response.reaction.selected],
+          canReact: generation === reactionEpoch && response.reaction.canReact };
+        entry.unknown = false;
+      }
+    } catch (error) {
+      if (entry.revision === revision && visitor === reactionVisitor) {
+        const known = typeof error?.outcomeUnknown === 'boolean' ? !error.outcomeUnknown :
+          ['RATE_LIMITED', 'THREAD_LOCKED', 'NOT_REACTABLE', 'VALIDATION_FAILED'].includes(error?.code);
+        entry.unknown = !known;
+        if (error?.notReactable || ['THREAD_LOCKED', 'NOT_REACTABLE'].includes(error?.code))
+          entry.data = { ...entry.data, canReact: false };
+        entry.error = error?.code === 'RATE_LIMITED' ? reactionWords.rate : reactionWords.writeFailed;
+      }
+    } finally {
+      entry.pending = false; updateReactionPanels(id);
+      // Unknown writes are reconciled only by a read. Never repeat the write automatically.
+      if (entry.unknown || entry.data?.canReact === false || visitor !== reactionVisitor || generation !== reactionEpoch) await readReactions([id]);
+    }
+  }
+  section.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && reactionMenuId) { event.preventDefault(); closeReactionMenu(true); }
+  });
+  document.addEventListener('pointerdown', event => {
+    if (reactionMenuId && !event.target.closest('.jd-discussion-reactions')) closeReactionMenu();
+  });
+
+  function message(kind, retry, errorText = words.error) {
+    status.replaceChildren();
+    if (!kind) return;
+    status.append(make('span', '', kind === 'loading' ? words.loading : errorText));
+    if (kind === 'error') {
+      const button = make('button', 'jd-discussion-action', words.retry);
+      button.type = 'button';
+      button.addEventListener('click', retry);
+      status.append(button);
+    }
+  }
+  function busy(value) {
+    state.pending = value;
+    comments.setAttribute('aria-busy', String(value));
+    more.disabled = persistentMore.disabled = value || state.posting;
+    refresh.disabled = value || state.posting;
+    rootAction.disabled = value || state.posting;
+    updateSubmit();
+    section.querySelectorAll('.jd-discussion-reply-action').forEach(button => { button.disabled = value || state.posting; });
+    versionButtons.querySelectorAll('button').forEach(button => { button.disabled = value || state.posting; });
+    if (!value) replayLocation();
+  }
+  function dateTime(value) {
+    const time = make('time', 'jd-discussion-time');
+    time.dateTime = value;
+    const date = new Date(value);
+    time.textContent = Number.isNaN(date.getTime()) ? value : dateFormat.format(date);
+    return time;
+  }
+  // Keep raw pages/seen IDs/cursors intact; project only the public display tree.
+  function projectRoots(roots) {
+    return roots.flatMap(root => {
+      // Root pagination returns the complete flat reply list for each tree.
+      // Keep anonymous context only when this tree still has published content.
+      if (root.status !== 'published' && !(root.replies ?? []).some(reply => reply.status === 'published')) return [];
+      const referenced = new Set((root.replies ?? []).filter(reply => reply.status === 'published')
+        .map(reply => reply.replyToCommentId).filter(Boolean));
+      const replies = (root.replies ?? []).filter(reply => reply.status !== 'deleted' || referenced.has(reply.id));
+      return [{ ...root, replies }];
+    });
+  }
+  function visibleCount(page) {
+    return projectRoots(page.comments).reduce((count, root) => count + 1 + root.replies.length, 0);
+  }
+  function findComment(id) {
+    for (const page of [state.persistent, state.pages.get(state.activeVersion)]) {
+      for (const root of page?.comments ?? []) {
+        const comment = root.id === id ? root : (root.replies ?? []).find(reply => reply.id === id);
+        if (comment) return { root, comment };
+      }
+    }
+    return null;
+  }
+  function canReply(root, comment) {
+    return writeEnabled && !state.threadLocked && root.status === 'published' && root.canReply === true &&
+      comment.status === 'published' && comment.canReply === true;
+  }
+  function activeReply() {
+    return state.activeTarget?.startsWith('reply:') ? findComment(state.activeTarget.slice(6)) : null;
+  }
+  function renderReplyReference(comment, root) {
+    if (!/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(comment.replyToCommentId ?? '')) return null;
+    const target = comment.replyTo?.id === comment.replyToCommentId ? comment.replyTo : null;
+    const label = target?.status === 'published' ? words.replyTo(target.displayName || words.guest) :
+      target?.status === 'hidden' ? words.replyHidden : target?.status === 'deleted' ? words.replyDeleted : words.replyMissing;
+    const known = target && ['published', 'hidden', 'deleted'].includes(target.status);
+    const link = make(known ? 'a' : 'span', 'jd-discussion-reply-reference', `↳ ${label}`);
+    link.dataset.replyToCommentId = comment.replyToCommentId;
+    if (!known) return link;
+    const url = new URL(location.href);
+    url.hash = `jd-comment-${comment.replyToCommentId}`;
+    if (root.discussionScope === 'persistent') {
+      url.searchParams.set('discussionScope', 'persistent'); url.searchParams.delete('discussionVersion');
+    } else {
+      url.searchParams.delete('discussionScope');
+      if (root.guideVersion !== context.guideVersion) url.searchParams.set('discussionVersion', root.guideVersion);
+      else url.searchParams.delete('discussionVersion');
+    }
+    link.href = url.href;
+    link.addEventListener('click', event => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      history.pushState(null, '', link.href);
+      followLocation();
+    });
+    return link;
+  }
+  function renderComment(comment, isRoot, root = comment) {
+    const article = make('article', isRoot ? 'jd-discussion-comment' : 'jd-discussion-reply');
+    article.dataset.commentId = comment.id;
+    article.id = `jd-comment-${comment.id}`;
+    article.tabIndex = -1;
+    const published = comment.status === 'published';
+    if (published) {
+      const meta = make('div', 'jd-discussion-meta');
+      meta.append(make('strong', 'jd-discussion-author', comment.displayName || words.guest));
+      if (comment.authorKind === 'maintainer') meta.append(make('span', 'jd-discussion-tag', words.maintainer));
+      if (isRoot && comment.authorKind === 'maintainer' && comment.pinnedAt)
+        meta.append(make('span', 'jd-discussion-tag', words.pinned));
+      meta.append(dateTime(comment.createdAt));
+      if (isRoot && comment.discussionScope === 'persistent') meta.append(make('span', 'jd-discussion-tag', words.original + ' · ' + comment.guideVersion));
+      article.append(meta);
+      const reference = !isRoot && renderReplyReference(comment, root);
+      if (reference) article.append(reference);
+      article.append(make('p', 'jd-discussion-body', comment.body ?? ''));
+      const actions = make('div', 'jd-discussion-actions');
+      if (reactionReadEnabled && root.status === 'published') actions.append(reactionPanel(comment.id));
+      const source = isRoot && runtime.getReference(comment.pageHash);
+      if (source) {
+        const anchor = make('a', 'jd-discussion-fragment', source.label);
+        anchor.href = source.href;
+        actions.append(anchor);
+      }
+      if (canReply(root, comment)) {
+        const replyAction = make('button', 'jd-discussion-action jd-discussion-reply-action', words.reply);
+        replyAction.type = 'button'; replyAction.disabled = state.pending || state.posting;
+        replyAction.addEventListener('click', () => openComposer(`reply:${comment.id}`, replyAction));
+        actions.append(replyAction);
+      }
+      if (reportEnabled) {
+        const reportAction = make('button', 'jd-discussion-action jd-discussion-report-action', words.report);
+        reportAction.type = 'button';
+        reportAction.addEventListener('click', () => window.__jdFeedbackDialog?.openReport(comment.id, reportAction));
+        actions.append(reportAction);
+      }
+      if (actions.childElementCount) article.append(actions);
+    } else {
+      article.append(make('p', 'jd-discussion-tombstone',
+        comment.status === 'hidden' ? words.hidden : words.deleted));
+      article.append(dateTime(comment.createdAt));
+    }
+    if (isRoot && Array.isArray(comment.replies) && comment.replies.length) {
+      const replies = make('div', 'jd-discussion-replies');
+      replies.setAttribute('aria-label', words.replies);
+      comment.replies.forEach(reply => replies.append(renderComment(reply, false, root)));
+      article.append(replies);
+    }
+    return article;
+  }
+  function renderVersions() {
+    versions.hidden = state.index.length === 0;
+    versionButtons.replaceChildren();
+    if (versions.hidden) return;
+    for (const item of [{ guideVersion: context.guideVersion, current: true },
+      ...state.index.map(summary => ({ ...summary, current: false }))]) {
+      const page = state.pages.get(item.guideVersion);
+      // Backend historical counts include deleted rows. Show a visible count only
+      // after this version's raw pagination is complete; never estimate from a subset.
+      const label = item.current ? `${words.current} · ${item.guideVersion}` :
+        page && !page.nextCursor ? `${item.guideVersion} · ${words.count(visibleCount(page))}` : item.guideVersion;
+      const button = make('button', 'jd-discussion-action', label);
+      button.type = 'button';
+      button.setAttribute('aria-pressed', String(item.guideVersion === state.activeVersion));
+      button.disabled = state.pending || state.posting;
+      button.addEventListener('click', () => loadVersion(item.guideVersion));
+      versionButtons.append(button);
+    }
+  }
+  function renderPage() {
+    const page = state.pages.get(state.activeVersion);
+    if (!page) return;
+    // A comment-tree refresh/version change invalidates view eligibility, not other comments' writes.
+    reactionEpoch++;
+    state.threadLocked = page.status === 'locked';
+    lockedNotice.hidden = page.status !== 'locked';
+    rootAction.hidden = !writeEnabled || state.threadLocked || state.activeVersion !== context.guideVersion;
+    rootAction.disabled = state.pending || state.posting;
+    persistentComments.replaceChildren();
+    const persistentPage = state.persistent;
+    persistent.hidden = !persistentPage || (!projectRoots(persistentPage.comments).length && !persistentPage.nextCursor);
+    if (persistentPage) projectRoots(persistentPage.comments).forEach(comment => persistentComments.append(renderComment(comment, true)));
+    persistentMore.hidden = !persistentPage?.nextCursor;
+    persistentMore.disabled = state.pending || state.posting;
+    comments.replaceChildren();
+    const visibleRoots = projectRoots(page.comments);
+    if (visibleRoots.length) visibleRoots.forEach(comment => comments.append(renderComment(comment, true)));
+    else if (!page.nextCursor) comments.append(make('p', 'jd-discussion-empty', words.empty));
+    more.hidden = !page.nextCursor;
+    more.disabled = state.pending || state.posting;
+    renderVersions();
+    if (state.activeTarget === 'root' && (state.threadLocked || state.activeVersion !== context.guideVersion))
+      closeComposer(false);
+    else placeComposer();
+    scheduleReactions();
+  }
+
+  const form = make('form', 'jd-discussion-composer');
+  form.noValidate = true;
+  const identity = make('p', 'jd-discussion-identity', words.identity);
+  const composerTarget = make('p', 'jd-discussion-composer-target');
+  composerTarget.hidden = true;
+  const nameLabel = make('label', '', words.name);
+  nameLabel.htmlFor = 'jd-discussion-name';
+  const nameInput = make('input', 'jd-discussion-input');
+  nameInput.id = 'jd-discussion-name'; nameInput.type = 'text'; nameInput.autocomplete = 'off';
+  const nameError = make('p', 'jd-discussion-field-error');
+  nameError.id = 'jd-discussion-name-error'; nameInput.setAttribute('aria-describedby', nameError.id);
+  const bodyLabel = make('label', '', words.body);
+  bodyLabel.htmlFor = 'jd-discussion-new-body';
+  const bodyInput = make('textarea', 'jd-discussion-input');
+  bodyInput.id = 'jd-discussion-new-body'; bodyInput.rows = 5;
+  const bodyError = make('p', 'jd-discussion-field-error');
+  bodyError.id = 'jd-discussion-body-error'; bodyInput.setAttribute('aria-describedby', bodyError.id);
+  const subscriptionChoice = make('div', 'jd-discussion-subscription-choice');
+  subscriptionChoice.hidden = !subscriptionEnabled;
+  const optInLabel = make('label', 'jd-discussion-subscription-opt-label');
+  const subscriptionOptIn = make('input', 'jd-discussion-subscription-opt-in');
+  subscriptionOptIn.type = 'checkbox';
+  optInLabel.append(subscriptionOptIn, make('span', '', subscriptionWords.optIn));
+  const emailLabel = make('label', 'jd-discussion-subscription-email-label', subscriptionWords.email);
+  emailLabel.htmlFor = 'jd-discussion-subscription-email'; emailLabel.hidden = true;
+  const subscriptionEmail = make('input', 'jd-discussion-input jd-discussion-subscription-email');
+  subscriptionEmail.id = emailLabel.htmlFor; subscriptionEmail.type = 'email';
+  subscriptionEmail.autocomplete = 'off'; subscriptionEmail.maxLength = 254; subscriptionEmail.hidden = true;
+  const emailHelp = make('p', 'jd-discussion-subscription-help', subscriptionWords.help);
+  emailHelp.id = 'jd-discussion-subscription-help'; subscriptionEmail.setAttribute('aria-describedby', emailHelp.id);
+  subscriptionChoice.append(optInLabel, emailLabel, subscriptionEmail, emailHelp);
+  const honeypot = make('input', 'jd-discussion-honeypot');
+  honeypot.type = 'text'; honeypot.name = 'website'; honeypot.autocomplete = 'off';
+  honeypot.tabIndex = -1; honeypot.setAttribute('aria-hidden', 'true');
+  const verifySlot = make('div', 'jd-discussion-turnstile');
+  const formStatus = make('p', 'jd-discussion-form-status');
+  formStatus.setAttribute('role', 'status'); formStatus.setAttribute('aria-live', 'polite');
+  formStatus.tabIndex = -1;
+  const verifyRetry = make('button', 'jd-discussion-action', words.verifyRetry);
+  verifyRetry.type = 'button'; verifyRetry.hidden = true;
+  const confirmUnposted = make('button', 'jd-discussion-action jd-discussion-confirm-unposted', words.confirmUnposted);
+  confirmUnposted.type = 'button'; confirmUnposted.hidden = true;
+  const actions = make('div', 'jd-discussion-composer-actions');
+  const submit = make('button', 'jd-discussion-action jd-discussion-submit', words.rootSubmit);
+  submit.type = 'submit'; submit.disabled = true;
+  const cancel = make('button', 'jd-discussion-action', words.cancel);
+  cancel.type = 'button';
+  actions.append(submit, cancel);
+  form.append(composerTarget, identity, nameLabel, nameInput, nameError, bodyLabel, bodyInput, bodyError,
+    subscriptionChoice, honeypot, verifySlot, formStatus, verifyRetry, confirmUnposted, actions);
+  if (writeEnabled) composerHost.append(form);
+
+  let turnstileScript = null;
+  let widgetId = null;
+  let token = null;
+  let widgetGeneration = 0;
+  const points = value => Array.from(value).length;
+  function saveDraft() {
+    if (state.activeTarget) state.drafts.set(state.activeTarget,
+      { name: nameInput.value, body: bodyInput.value, subscriptionOptIn: subscriptionOptIn.checked, subscriptionEmail: subscriptionEmail.value });
+  }
+  function fieldError(input, messageNode, messageText) {
+    messageNode.textContent = messageText || '';
+    if (messageText) input.setAttribute('aria-invalid', 'true');
+    else input.removeAttribute('aria-invalid');
+  }
+  function clearFieldErrors() {
+    fieldError(nameInput, nameError, '');
+    fieldError(bodyInput, bodyError, '');
+  }
+  function updateSubmit() {
+    subscriptionOptIn.disabled = subscriptionEmail.disabled = state.posting;
+    const uncertain = state.uncertainTargets.has(state.activeTarget);
+    confirmUnposted.hidden = !uncertain;
+    const reply = activeReply();
+    const unavailable = state.activeTarget !== 'root' && (!reply || !canReply(reply.root, reply.comment));
+    confirmUnposted.disabled = state.pending || state.posting || unavailable;
+    submit.disabled = state.pending || state.posting || uncertain || unavailable || !token || !state.activeTarget;
+  }
+  function clearWidget() {
+    widgetGeneration++;
+    token = null;
+    if (widgetId !== null && window.turnstile) {
+      try { window.turnstile.remove(widgetId); } catch { /* A failed widget is already unusable. */ }
+    }
+    widgetId = null;
+    verifySlot.replaceChildren();
+    updateSubmit();
+  }
+  function ensureTurnstile() {
+    if (window.turnstile) return Promise.resolve(window.turnstile);
+    if (turnstileScript) return turnstileScript;
+    turnstileScript = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => { script.remove(); reject(Error('TURNSTILE_UNAVAILABLE')); }, 10_000);
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.onload = () => {
+        clearTimeout(timeout);
+        if (window.turnstile) resolve(window.turnstile);
+        else { script.remove(); reject(Error('TURNSTILE_UNAVAILABLE')); }
+      };
+      script.onerror = () => { clearTimeout(timeout); script.remove(); reject(Error('TURNSTILE_UNAVAILABLE')); };
+      document.head.append(script);
+    }).catch(error => { turnstileScript = null; throw error; });
+    return turnstileScript;
+  }
+  async function renderChallenge(messageText = words.verifyWait) {
+    clearWidget();
+    if (!state.activeTarget || !writeEnabled) return;
+    const selected = activeReply();
+    if (state.activeTarget !== 'root' && (!selected || !canReply(selected.root, selected.comment))) {
+      formStatus.textContent = state.threadLocked ? words.postLocked : words.replyUnavailable;
+      verifyRetry.hidden = true; return;
+    }
+    if (state.uncertainTargets.has(state.activeTarget)) {
+      formStatus.textContent = words.postUnknown; verifyRetry.hidden = true;
+      return;
+    }
+    const generation = widgetGeneration;
+    formStatus.textContent = messageText;
+    verifyRetry.hidden = true;
+    try {
+      const turnstile = await ensureTurnstile();
+      if (generation !== widgetGeneration || !state.activeTarget) return;
+      const compactTurnstile = verifySlot.getBoundingClientRect().width < 300;
+      widgetId = turnstile.render(verifySlot, {
+        sitekey: runtime.transport.turnstileSitekey, action: 'discussion_post',
+        theme: 'auto', size: compactTurnstile ? 'compact' : 'flexible',
+        'response-field': false,
+        callback(value) {
+          if (generation !== widgetGeneration || state.posting) return;
+          token = value; updateSubmit(); verifyRetry.hidden = true;
+          if (formStatus.textContent === words.verifyWait || formStatus.textContent === words.verifyLoad)
+            formStatus.textContent = '';
+        },
+        'error-callback'() {
+          if (generation !== widgetGeneration) return true;
+          token = null; updateSubmit(); formStatus.textContent = words.verifyLoad;
+          verifyRetry.hidden = false; return true;
+        },
+        'expired-callback'() {
+          if (generation === widgetGeneration) renderChallenge(words.verifyWait);
+        },
+        'timeout-callback'() {
+          if (generation === widgetGeneration) renderChallenge(words.verifyWait);
+        },
+      });
+    } catch {
+      if (generation !== widgetGeneration) return;
+      token = null; updateSubmit(); formStatus.textContent = words.verifyLoad;
+      verifyRetry.hidden = false;
+    }
+  }
+  function closeComposer(restoreFocus = true) {
+    if (!state.activeTarget) return;
+    saveDraft();
+    const opener = state.opener;
+    state.activeTarget = null; state.activeReplyRootId = null; state.replyUnavailable = false; state.opener = null;
+    clearWidget();
+    composerHost.hidden = true;
+    comments.before(composerHost);
+    if (restoreFocus && opener?.isConnected && opener.getClientRects().length) opener.focus({ preventScroll: true });
+    else if (restoreFocus) refresh.focus({ preventScroll: true });
+  }
+  function placeComposer() {
+    if (!state.activeTarget) return;
+    if (state.activeTarget === 'root') {
+      if (rootAction.hidden) { closeComposer(false); return; }
+      composerTarget.hidden = true;
+      composerTarget.removeAttribute('data-reply-to-comment-id');
+      composerTarget.removeAttribute('data-parent-comment-id');
+      rootAction.after(composerHost);
+    } else {
+      const targetId = state.activeTarget.slice(6);
+      const selected = activeReply();
+      const article = document.getElementById(`jd-comment-${targetId}`);
+      const action = article && [...article.children].find(node => node.classList.contains('jd-discussion-actions'))
+        ?.querySelector('.jd-discussion-reply-action');
+      composerTarget.dataset.replyToCommentId = targetId;
+      composerTarget.dataset.parentCommentId = state.activeReplyRootId;
+      composerTarget.hidden = false;
+      if (!selected || !canReply(selected.root, selected.comment) || !action) {
+        // Keep the exact target and an accessible, copyable draft even after its
+        // Reply action disappears. Never reinterpret it as a reply to the root.
+        state.replyUnavailable = true;
+        const label = selected?.comment.status === 'hidden' ? words.replyHidden :
+          selected?.comment.status === 'deleted' ? words.replyDeleted : words.replyMissing;
+        composerTarget.replaceChildren(make('span', '', label));
+        comments.before(composerHost);
+        composerHost.hidden = false;
+        clearWidget(); verifyRetry.hidden = true;
+        formStatus.textContent = state.threadLocked ? words.postLocked : words.replyUnavailable;
+        return;
+      }
+      const restored = state.replyUnavailable;
+      state.replyUnavailable = false;
+      state.activeReplyRootId = selected.root.id;
+      composerTarget.dataset.parentCommentId = selected.root.id;
+      composerTarget.replaceChildren(make('span', '', words.replyingTo(selected.comment.displayName || words.guest)), dateTime(selected.comment.createdAt));
+      state.opener = action;
+      action.parentElement.after(composerHost);
+      if (restored) renderChallenge();
+    }
+    composerHost.hidden = false;
+  }
+  function openComposer(target, opener) {
+    if (!writeEnabled || state.threadLocked || state.pending || state.posting) return;
+    const selected = target === 'root' ? null : findComment(target.slice(6));
+    if (target !== 'root' && (!selected || !canReply(selected.root, selected.comment))) return;
+    if (state.activeTarget === target) { nameInput.focus(); return; }
+    if (state.activeTarget) closeComposer(false);
+    state.activeTarget = target; state.activeReplyRootId = selected?.root.id ?? null; state.opener = opener;
+    const draft = state.drafts.get(target);
+    nameInput.value = draft?.name ?? ''; bodyInput.value = draft?.body ?? '';
+    subscriptionOptIn.checked = draft?.subscriptionOptIn === true; subscriptionEmail.value = draft?.subscriptionEmail ?? '';
+    emailLabel.hidden = subscriptionEmail.hidden = !subscriptionOptIn.checked;
+    honeypot.value = '';
+    clearFieldErrors(); postNotice.textContent = '';
+    submit.textContent = target === 'root' ? words.rootSubmit : words.replySubmit;
+    placeComposer();
+    nameInput.focus({ preventScroll: true });
+    renderChallenge();
+  }
+  function validateDraft(target) {
+    clearFieldErrors();
+    const name = nameInput.value.trim();
+    const body = bodyInput.value.trim();
+    let valid = true;
+    if (points(name) > 40) { fieldError(nameInput, nameError, words.nameLong); valid = false; }
+    if (!body) { fieldError(bodyInput, bodyError, words.emptyBody); valid = false; }
+    else if (points(body) > 2000) { fieldError(bodyInput, bodyError, words.bodyLong); valid = false; }
+    if (!valid) (nameInput.hasAttribute('aria-invalid') ? nameInput : bodyInput).focus();
+    return valid;
+  }
+  async function refreshDiscussion() {
+    // Stage every requested page before replacing caches: a later-page error
+    // leaves the complete previous view and composer available for retry.
+
+    saveDraft();
+    const loadedVersionRoots = state.pages.get(state.activeVersion)?.comments.length ?? 0;
+    const loadedPersistentRoots = state.persistent?.comments.length ?? 0;
+    const replyRootId = state.activeTarget?.startsWith('reply:') ? state.activeReplyRootId : null;
+    const replySection = replyRootId && state.persistent?.comments.some(root => root.id === replyRootId) ? 'persistent' :
+      replyRootId && state.pages.get(state.activeVersion)?.comments.some(root => root.id === replyRootId) ? 'current' : null;
+    const response = await read(state.activeVersion, null);
+    const persistentData = response.persistent ?? { comments: [], nextCursor: null };
+    if (!Array.isArray(persistentData.comments)) throw Error('INVALID_DISCUSSION_RESPONSE');
+    const persistentPage = { comments: [...persistentData.comments], seen: new Set(persistentData.comments.map(root => root.id)), nextCursor: persistentData.nextCursor };
+    const roots = response.currentVersion.comments;
+    const page = { status: response.thread.status, comments: [...roots], seen: new Set(roots.map(root => root.id)), nextCursor: response.currentVersion.nextCursor };
+    for (const [selected, expected] of [['current', loadedVersionRoots], ['persistent', loadedPersistentRoots]]) {
+      const selectedPage = selected === 'persistent' ? persistentPage : page;
+      const cursors = new Set();
+      // New roots can push the open reply target beyond the previous page count.
+      while (selectedPage.nextCursor && (selectedPage.comments.length < expected ||
+          (replySection === selected && !selectedPage.seen.has(replyRootId)))) {
+        if (cursors.has(selectedPage.nextCursor)) throw Error('REPEATED_DISCUSSION_CURSOR');
+        cursors.add(selectedPage.nextCursor);
+        const next = await read(selected === 'persistent' ? context.guideVersion : state.activeVersion, selectedPage.nextCursor, selected);
+        const data = selected === 'persistent' ? next.persistent : next.currentVersion;
+        if (!Array.isArray(data?.comments)) throw Error('INVALID_DISCUSSION_RESPONSE');
+        for (const root of data.comments) if (!selectedPage.seen.has(root.id)) { selectedPage.comments.push(root); selectedPage.seen.add(root.id); }
+        selectedPage.nextCursor = data.nextCursor;
+      }
+    }
+    state.pages.set(state.activeVersion, page);
+    state.persistent = persistentPage;
+    if (state.activeVersion === context.guideVersion) state.index = response.earlierVersions;
+    // Moving the existing composer through a replaced comment tree can blur it.
+    const focused = document.activeElement;
+    const selection = focused === nameInput || focused === bodyInput ? [focused.selectionStart, focused.selectionEnd] : null;
+    renderPage();
+    if (focused?.isConnected && section.contains(focused) && focused.getClientRects().length) {
+      focused.focus({ preventScroll: true });
+      if (selection) focused.setSelectionRange(...selection);
+    } else if (focused && section.contains(focused)) refresh.focus({ preventScroll: true });
+  }
+  async function manualRefresh() {
+    if (state.pending || state.posting) return;
+    const focused = document.activeElement;
+    const scrollX = window.scrollX, scrollY = window.scrollY;
+    const visible = [...section.querySelectorAll('article[id]')].find(node => node.getBoundingClientRect().bottom > 0);
+    const position = visible ? { id: visible.id, top: visible.getBoundingClientRect().top } : null;
+    busy(true); refresh.textContent = words.refreshing; message();
+    try { await refreshDiscussion(); message(); }
+    catch { message('error', manualRefresh, words.reloadFailed); scheduleReactions(); }
+    finally {
+      busy(false); refresh.textContent = words.refresh;
+      if (focused === refresh || !focused?.isConnected || !focused.getClientRects().length) refresh.focus({ preventScroll: true });
+      const anchor = position && document.getElementById(position.id);
+      window.scrollTo(scrollX, anchor ? window.scrollY + anchor.getBoundingClientRect().top - position.top : scrollY);
+      positionReactionMenu();
+    }
+  }
+  function outcomeUnknown(error) {
+    if (typeof error?.outcomeUnknown === 'boolean') return error.outcomeUnknown;
+    return !['RATE_LIMITED', 'VERIFICATION_FAILED', 'THREAD_LOCKED', 'VALIDATION_FAILED', 'INVALID_INPUT', 'INVALID_REQUEST'].includes(error?.code) && !error?.fieldErrors;
+  }
+  function postError(error) {
+    if (error?.code === 'RATE_LIMITED') return words.rateLimited;
+    if (error?.code === 'VERIFICATION_FAILED') return words.verifyFailed;
+    if (error?.code === 'THREAD_LOCKED') return words.postLocked;
+    if (error?.fieldErrors?.replyToCommentId || error?.fieldErrors?.parentCommentId) return words.replyUnavailable;
+    if (error?.fieldErrors?.displayName) fieldError(nameInput, nameError, words.badName);
+    if (error?.fieldErrors?.body) fieldError(bodyInput, bodyError, words.emptyBody);
+    return words.postFailed;
+  }
+  const validSubscriptionExpiry = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value) &&
+    Number.isFinite(Date.parse(value)) && new Date(value).toISOString() === value;
+  const subscriptionStates = Object.keys(subscriptionWords.states);
+  const validSubscription = result => result?.ok === true && result.subscription &&
+    subscriptionStates.includes(result.subscription.state) && typeof result.subscription.mayRetry === 'boolean' &&
+    (result.subscription.expiresAt === undefined || validSubscriptionExpiry(result.subscription.expiresAt));
+  const validEmail = email => typeof email === 'string' && email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  function newSubscriptionProof() {
+    try { return Array.from(crypto.getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, '0')).join(''); }
+    catch { return null; }
+  }
+  function showSubscription(snapshot, commentId) {
+    // These objects and their credentials live only in this closure; no public comment metadata or storage.
+    const card = make('section', 'jd-discussion-subscription-result');
+    const title = make('h3', '', subscriptionWords.title);
+    const notice = make('p', 'jd-discussion-subscription-status');
+    notice.setAttribute('role', 'status'); notice.setAttribute('aria-live', 'polite'); notice.tabIndex = -1;
+    const label = make('label', 'jd-discussion-subscription-correction', subscriptionWords.email);
+    const email = make('input', 'jd-discussion-input jd-discussion-subscription-correct-email');
+    email.type = 'email'; email.autocomplete = 'off'; email.maxLength = 254; email.value = snapshot.email;
+    label.append(email);
+    const retry = make('button', 'jd-discussion-action jd-discussion-subscription-retry', subscriptionWords.retry);
+    const check = make('button', 'jd-discussion-action jd-discussion-subscription-check', subscriptionWords.check);
+    retry.type = check.type = 'button';
+    const controls = make('div', 'jd-discussion-subscription-controls'); controls.append(retry, check);
+    card.append(title, notice, label, controls); subscriptionResults.prepend(card);
+    const job = { commentId, proof: snapshot.proof, email: snapshot.email, pending: false,
+      fixed: false, unknown: false, localInvalid: !validEmail(snapshot.email), result: null, error: '', retryable: true };
+    const usable = /^[0-9a-f]{64}$/.test(job.proof ?? '') &&
+      typeof commentId === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(commentId);
+    function paint() {
+      // Capture the editor at paint time, after any scrolling/editing during this request.
+      const focused = document.activeElement;
+      const editor = state.activeTarget && !composerHost.hidden ?
+        (form.contains(focused) && focused.matches('input, textarea') ? focused : bodyInput) : null;
+      const before = editor?.getBoundingClientRect();
+      const viewportTop = window.visualViewport?.offsetTop ?? 0;
+      const preserveEditor = before?.height > 0 && before.top < viewportTop + (window.visualViewport?.height ?? innerHeight) && before.bottom > viewportTop;
+      const previousHeight = card.getBoundingClientRect().height;
+      const stateName = job.result?.state;
+      label.hidden = !job.localInvalid || job.fixed || !usable;
+      email.disabled = job.pending;
+      retry.hidden = !usable || job.unknown || ['active', 'cancelled', 'expired', 'verification_pending', 'verification_unknown'].includes(stateName) ||
+        (!job.localInvalid && !(job.result ? job.result.mayRetry : job.retryable));
+      check.hidden = !usable || job.localInvalid;
+      retry.disabled = check.disabled = job.pending;
+      notice.textContent = !usable ? subscriptionWords.noProof : job.pending ? job.message :
+        job.error || (job.localInvalid ? subscriptionWords.invalid : stateName ? subscriptionWords.states[stateName] : subscriptionWords.sending);
+      if (preserveEditor && editor.isConnected && Math.abs(card.getBoundingClientRect().height - previousHeight) > .5) {
+        const movement = editor.getBoundingClientRect().top - before.top;
+        if (Math.abs(movement) > .5) window.scrollBy({ top: movement, behavior: 'instant' });
+      }
+    }
+    async function request(checkOnly) {
+      if (job.pending || !usable || (!checkOnly && (job.unknown || retry.hidden))) return;
+      if (!checkOnly && !job.fixed) {
+        job.email = email.value.trim(); job.localInvalid = !validEmail(job.email);
+        if (job.localInvalid) { job.error = ''; paint(); email.focus({ preventScroll: true }); return; }
+      }
+      const focused = document.activeElement === (checkOnly ? check : retry);
+      job.pending = true; job.message = checkOnly ? subscriptionWords.checking : subscriptionWords.sending; paint();
+      const input = { commentId: job.commentId, pageKey: context.pageKey, locale: context.locale, subscriptionProof: job.proof };
+      try {
+        const response = await (checkOnly ? runtime.transport.readSubscriptionStatus(input) : runtime.transport.enrollSubscription({ ...input, email: job.email }));
+        if (!validSubscription(response)) { const error = Error('SUBSCRIPTION_RESPONSE_INVALID'); error.outcomeUnknown = true; throw error; }
+        job.result = { ...response.subscription }; job.error = '';
+        job.unknown = response.subscription.state === 'verification_unknown';
+        if (!checkOnly || response.subscription.state !== 'not_requested') job.fixed = true;
+      } catch (error) {
+        if (checkOnly) { job.error = subscriptionWords.statusFailed; }
+        else {
+          job.unknown = error?.outcomeUnknown !== false;
+          job.fixed = job.fixed || job.unknown || error?.code === 'SUBSCRIPTION_EMAIL_FIXED';
+          job.error = job.unknown ? subscriptionWords.unknown : error?.code === 'SUBSCRIPTION_EMAIL_INVALID' ? subscriptionWords.invalid :
+            error?.code === 'SUBSCRIPTION_UNAVAILABLE' ? subscriptionWords.unavailable : error?.code === 'SUBSCRIPTION_RATE_LIMITED' ? subscriptionWords.rate :
+            error?.code === 'SUBSCRIPTION_EMAIL_FIXED' ? subscriptionWords.fixed : subscriptionWords.failed;
+          job.localInvalid = !job.fixed && error?.code === 'SUBSCRIPTION_EMAIL_INVALID';
+          job.retryable = error?.code !== 'SUBSCRIPTION_EMAIL_FIXED';
+        }
+      } finally {
+        job.pending = false; paint();
+        // Restore only our own clicked control; never take focus from a new draft or another card.
+        if (focused && [document.body, retry, check].includes(document.activeElement)) {
+          const next = !check.hidden ? check : !retry.hidden ? retry : notice; next.focus({ preventScroll: true });
+        }
+      }
+    }
+    retry.addEventListener('click', () => { retry.focus({ preventScroll: true }); void request(false); });
+    check.addEventListener('click', () => { check.focus({ preventScroll: true }); void request(true); });
+    paint(); if (usable && !job.localInvalid) void request(false);
+  }
+  async function submitDraft(event) {
+    event.preventDefault();
+    const target = state.activeTarget;
+    if (!target || state.pending || state.posting || state.uncertainTargets.has(target) || !validateDraft(target)) return;
+    const selected = activeReply();
+    if (target !== 'root' && (!selected || !canReply(selected.root, selected.comment))) {
+      saveDraft(); placeComposer(); updateSubmit(); return;
+    }
+    if (!token) { formStatus.textContent = words.verifyWait; return; }
+    const subscriptionSnapshot = subscriptionEnabled && subscriptionOptIn.checked ?
+      { email: subscriptionEmail.value.trim(), proof: newSubscriptionProof() } : null;
+    let subscriptionPostedId = null;
+    const usedToken = token;
+    token = null;
+    state.posting = true; updateSubmit(); cancel.disabled = true;
+    rootAction.disabled = refresh.disabled = true;
+    versionButtons.querySelectorAll('button').forEach(button => { button.disabled = true; });
+    more.disabled = persistentMore.disabled = true;
+    section.querySelectorAll('.jd-discussion-reply-action').forEach(button => { button.disabled = true; });
+    formStatus.textContent = words.posting;
+    const payload = {
+      pageKey: context.pageKey, locale: context.locale, guideVersion: context.guideVersion,
+      displayName: nameInput.value, body: bodyInput.value,
+      pageHash: target === 'root' ? runtime.getCommentPageHash() : '',
+      parentCommentId: selected?.root.id ?? null,
+      replyToCommentId: selected?.comment.id ?? null,
+      turnstileToken: usedToken, honeypot: honeypot.value,
+    };
+    if (subscriptionSnapshot?.proof) payload.subscriptionProof = subscriptionSnapshot.proof;
+    try {
+      const posted = await runtime.transport.postComment(payload);
+      if (posted?.httpStatus !== 201) throw Error('DISCUSSION_POST_FAILED');
+      subscriptionPostedId = posted.commentId;
+      // Subscription work is deliberately outside the comment request catch and refresh lifecycle.
+      if (subscriptionSnapshot) queueMicrotask(() => { try { showSubscription(subscriptionSnapshot, subscriptionPostedId); } catch { /* Never change the confirmed public outcome. */ } });
+      state.drafts.delete(target); state.uncertainTargets.delete(target);
+      state.activeTarget = null; state.activeReplyRootId = null; state.replyUnavailable = false; state.opener = null;
+      clearWidget(); composerHost.hidden = true; comments.before(composerHost);
+      postNotice.textContent = target === 'root' ? words.rootSuccess : words.replySuccess;
+      postNotice.dataset.state = 'success';
+      try {
+        await refreshDiscussion();
+        const rendered = posted.commentId && document.getElementById(`jd-comment-${posted.commentId}`);
+        (rendered || postNotice).focus({ preventScroll: true });
+      } catch {
+        postNotice.textContent = words.refreshFailed;
+        postNotice.focus({ preventScroll: true });
+      }
+    } catch (error) {
+      saveDraft();
+      const uncertain = outcomeUnknown(error);
+      if (uncertain) state.uncertainTargets.add(target);
+      const messageText = uncertain ? words.postUnknown : postError(error);
+      if (!uncertain && error?.code === 'THREAD_LOCKED') {
+        for (const page of state.pages.values()) page.status = 'locked';
+        if (target === 'root') closeComposer(false);
+        postNotice.textContent = messageText;
+        try { await refreshDiscussion(); } catch { renderPage(); }
+      } else if (!uncertain && target !== 'root' &&
+          (error?.fieldErrors?.replyToCommentId || error?.fieldErrors?.parentCommentId)) {
+        if (error.fieldErrors.replyToCommentId && selected) selected.comment.canReply = false;
+        if (error.fieldErrors.parentCommentId && selected) selected.root.canReply = false;
+        state.posting = false; renderPage(); formStatus.focus({ preventScroll: true });
+      } else {
+        state.posting = false;
+        renderChallenge(messageText);
+      }
+    } finally {
+      state.posting = false; cancel.disabled = false;
+      updateSubmit();
+      rootAction.disabled = refresh.disabled = state.pending;
+      versionButtons.querySelectorAll('button').forEach(button => { button.disabled = state.pending; });
+      more.disabled = persistentMore.disabled = state.pending;
+      section.querySelectorAll('.jd-discussion-reply-action').forEach(button => { button.disabled = state.pending; });
+      replayLocation();
+    }
+  }
+  if (writeEnabled) {
+    rootAction.addEventListener('click', () => openComposer('root', rootAction));
+    cancel.addEventListener('click', () => closeComposer());
+    verifyRetry.addEventListener('click', () => renderChallenge());
+    confirmUnposted.addEventListener('click', () => {
+      if (!state.activeTarget || state.pending || state.posting) return;
+      const selected = activeReply();
+      if (state.activeTarget !== 'root' && (!selected || !canReply(selected.root, selected.comment))) return;
+      state.uncertainTargets.delete(state.activeTarget);
+      renderChallenge();
+    });
+    nameInput.addEventListener('input', saveDraft);
+    bodyInput.addEventListener('input', saveDraft);
+    subscriptionOptIn.addEventListener('change', () => { emailLabel.hidden = subscriptionEmail.hidden = !subscriptionOptIn.checked; saveDraft(); });
+    subscriptionEmail.addEventListener('input', saveDraft);
+    form.addEventListener('submit', submitDraft);
+  }
+  async function loadVersion(guideVersion) {
+    if (state.pending || state.posting) return;
+    const cached = state.pages.get(guideVersion);
+    if (cached) {
+      state.activeVersion = guideVersion;
+      saveDraft(); message(); renderPage();
+      return;
+    }
+    busy(true); message('loading');
+    try {
+      const response = await read(guideVersion, null);
+      saveDraft(); rememberPersistent(response);
+      const roots = response.currentVersion.comments;
+      state.pages.set(guideVersion, {
+        status: response.thread.status, comments: roots, seen: new Set(roots.map(root => root.id)),
+        nextCursor: response.currentVersion.nextCursor,
+      });
+      if (guideVersion === context.guideVersion && !state.index.length)
+        state.index = response.earlierVersions;
+      state.activeVersion = guideVersion;
+      message();
+    } catch {
+      message('error', () => loadVersion(guideVersion));
+    } finally {
+      busy(false); renderPage();
+    }
+  }
+  async function loadMore() {
+    const page = state.pages.get(state.activeVersion);
+    if (state.pending || state.posting || !page?.nextCursor) return;
+    saveDraft();
+    const guideVersion = state.activeVersion;
+    const cursor = page.nextCursor;
+    busy(true); message('loading');
+    try {
+      const response = await read(guideVersion, cursor);
+      for (const root of response.currentVersion.comments) {
+        if (!page.seen.has(root.id)) { page.comments.push(root); page.seen.add(root.id); }
+      }
+      page.nextCursor = response.currentVersion.nextCursor;
+      message();
+    } catch {
+      message('error', loadMore);
+    } finally {
+      busy(false); renderPage();
+    }
+  }
+  function rememberPersistent(response, reset = false) {
+    if (state.persistent && !reset) return;
+    const page = response.persistent ?? { comments: [], nextCursor: null };
+    if (!Array.isArray(page.comments)) throw Error('INVALID_DISCUSSION_RESPONSE');
+    state.persistent = { comments: page.comments, seen: new Set(page.comments.map(root => root.id)), nextCursor: page.nextCursor };
+  }
+  async function loadPersistent() {
+    const page = state.persistent;
+    if (state.pending || state.posting || !page?.nextCursor) return;
+    saveDraft(); busy(true); message('loading');
+    try {
+      const response = await read(context.guideVersion, page.nextCursor, 'persistent');
+      if (!Array.isArray(response.persistent?.comments)) throw Error('INVALID_DISCUSSION_RESPONSE');
+      for (const root of response.persistent.comments) if (!page.seen.has(root.id)) { page.comments.push(root); page.seen.add(root.id); }
+      page.nextCursor = response.persistent.nextCursor; message();
+    } catch { message('error', loadPersistent); }
+    finally { busy(false); renderPage(); }
+  }
+  refresh.addEventListener('click', manualRefresh);
+  persistentMore.addEventListener('click', loadPersistent);
+  const anchorParams = new URLSearchParams(location.search);
+  const historicalVersion = anchorParams.get('discussionVersion')?.trim();
+  const initialVersion = anchorParams.get('discussionScope') !== 'persistent' && historicalVersion && Array.from(historicalVersion).length <= 80 ? historicalVersion : context.guideVersion;
+  let locationGeneration = 0;
+  let pendingLocation = false;
+  let followingLocation = false;
+  let locationReplayScheduled = false;
+  let initializingLocation = true;
+  function replayLocation() {
+    if (!pendingLocation || state.pending || state.posting || followingLocation ||
+        initializingLocation || locationReplayScheduled) return;
+    locationReplayScheduled = true;
+    queueMicrotask(() => {
+      locationReplayScheduled = false;
+      if (pendingLocation && !state.pending && !state.posting && !followingLocation && !initializingLocation)
+        followLocation();
+    });
+  }
+  async function locateComment() {
+    const run = ++locationGeneration;
+    const id = location.hash.slice(1);
+    if (!new RegExp('^jd-comment-[0-9a-f]{8}-[0-9a-f-]{27}$', 'i').test(id)) return;
+    const visited = new Set();
+    while (run === locationGeneration) {
+      const target = document.getElementById(id);
+      if (target) { target.focus({ preventScroll: true }); target.scrollIntoView({ block: 'center', behavior: 'instant' }); return; }
+      const persistentTarget = new URLSearchParams(location.search).get('discussionScope') === 'persistent';
+      const page = persistentTarget ? state.persistent : state.pages.get(state.activeVersion);
+      if (!page?.nextCursor || visited.has(page.nextCursor)) break;
+      visited.add(page.nextCursor);
+      if (persistentTarget) await loadPersistent(); else await loadMore();
+      if (state.pending || state.posting) return;
+    }
+    if (run === locationGeneration) postNotice.textContent = words.missing;
+  }
+  async function followLocation() {
+    // Browser history can move while controls are disabled. Keep the latest URL
+    // pending and replay it after the active read/post finishes, without overlap.
+    pendingLocation = true;
+    locationGeneration++;
+    if (state.pending || state.posting || followingLocation || initializingLocation) return;
+    followingLocation = true;
+    pendingLocation = false;
+    try {
+      const params = new URLSearchParams(location.search); const version = params.get('discussionVersion')?.trim();
+      await loadVersion(params.get('discussionScope') !== 'persistent' && version && Array.from(version).length <= 80 ? version : context.guideVersion);
+      if (!pendingLocation && !state.pending && !state.posting) await locateComment();
+    } finally {
+      followingLocation = false;
+      replayLocation();
+    }
+  }
+  window.addEventListener('hashchange', followLocation); window.addEventListener('popstate', followLocation);
+  more.addEventListener('click', loadMore);
+  loadVersion(context.guideVersion)
+    .then(() => initialVersion === context.guideVersion ? undefined : loadVersion(initialVersion))
+    .then(() => pendingLocation ? undefined : locateComment())
+    .finally(() => { initializingLocation = false; replayLocation(); });
+})();
+</script>

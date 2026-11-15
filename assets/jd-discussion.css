@@ -1,0 +1,283 @@
+/* Guide discussion; all selectors stay within its mount. */
+#jd-public-discussion[hidden] { display: none !important; }
+#jd-public-discussion {
+  grid-column: body-content-start / body-content-end;
+  justify-self: center;
+  width: min(100%, 960px);
+  min-width: 0;
+  margin-inline: auto;
+  padding: 1rem 1rem 3.5rem;
+  color: var(--jd-text);
+}
+#jd-public-discussion .jd-discussion { min-width: 0; }
+#jd-public-discussion h2 {
+  margin: 0 0 .25rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--jd-border);
+  color: var(--jd-heading);
+  font-size: 1.55rem;
+  line-height: 1.4;
+}
+#jd-public-discussion .jd-discussion-explainer,
+#jd-public-discussion .jd-discussion-version,
+#jd-public-discussion .jd-discussion-time {
+  color: var(--jd-text-soft);
+  font-size: .84rem;
+}
+#jd-public-discussion .jd-discussion-explainer { margin: .3rem 0 0; }
+#jd-public-discussion .jd-discussion-version { margin: .3rem 0 1.2rem; }
+#jd-public-discussion .jd-discussion-status:not(:empty) { margin: .75rem 0; }
+#jd-public-discussion .jd-discussion-post-notice:not(:empty) { margin: .75rem 0; }
+#jd-public-discussion .jd-discussion-post-notice[data-state='success'] { color: var(--jd-primary); }
+#jd-public-discussion .jd-discussion-status .jd-discussion-action { margin-left: .75rem; }
+#jd-public-discussion .jd-discussion-locked {
+  margin: 0 0 1rem;
+  padding: .7rem .9rem;
+  border-left: 3px solid var(--jd-border-strong);
+  background: var(--jd-surface-soft);
+  color: var(--jd-text-soft);
+}
+#jd-public-discussion .jd-discussion-locked[hidden],
+#jd-public-discussion .jd-discussion-versions[hidden],
+#jd-public-discussion .jd-discussion-composer-host[hidden],
+#jd-public-discussion .jd-discussion-action[hidden] { display: none !important; }
+#jd-public-discussion .jd-discussion-comment {
+  min-width: 0;
+  padding: 1.1rem 0 1.2rem;
+  border-top: 1px solid var(--jd-border);
+}
+#jd-public-discussion .jd-discussion-meta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .25rem .7rem;
+  min-width: 0;
+  margin-bottom: .45rem;
+}
+#jd-public-discussion .jd-discussion-author,
+#jd-public-discussion .jd-discussion-time { overflow-wrap: anywhere; }
+#jd-public-discussion .jd-discussion-author { color: var(--jd-heading); font-weight: 650; }
+#jd-public-discussion .jd-discussion-tag {
+  color: var(--jd-primary);
+  font-size: .76rem;
+  font-weight: 700;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+#jd-public-discussion .jd-discussion-body {
+  margin: 0 0 .55rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+#jd-public-discussion .jd-discussion-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: .75rem;
+  row-gap: .35rem;
+  min-width: 0;
+  margin: .1rem 0 .5rem;
+}
+#jd-public-discussion .jd-discussion-actions :is(.jd-discussion-fragment, .jd-discussion-reply-action, .jd-discussion-report-action) {
+  margin: 0;
+}
+#jd-public-discussion .jd-discussion-fragment { display: inline-flex; margin-top: .1rem; font-size: .84rem; }
+#jd-public-discussion .jd-discussion-replies {
+  min-width: 0;
+  margin: 1rem 0 0 .3rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--jd-border);
+}
+#jd-public-discussion .jd-discussion-reply { min-width: 0; padding: .2rem 0 .85rem; }
+#jd-public-discussion .jd-discussion-reply:last-child { padding-bottom: 0; }
+#jd-public-discussion .jd-discussion-reply-reference {
+  display: block; margin: 0 0 .4rem; font-size: .84rem; overflow-wrap: anywhere;
+}
+#jd-public-discussion .jd-discussion-composer-target {
+  display: flex; flex-wrap: wrap; gap: .25rem .65rem;
+  min-width: 0; margin: 0 0 .35rem; overflow-wrap: anywhere;
+}
+#jd-public-discussion .jd-discussion-composer-target[hidden] { display: none; }
+#jd-public-discussion .jd-discussion-tombstone,
+#jd-public-discussion .jd-discussion-empty { color: var(--jd-text-soft); }
+#jd-public-discussion .jd-discussion-tombstone { margin: 0 0 .35rem; font-style: italic; }
+#jd-public-discussion .jd-discussion-empty { margin: 1rem 0; }
+#jd-public-discussion .jd-discussion-action {
+  min-height: 2.75rem;
+  padding: .55rem .85rem;
+  border: 1px solid var(--jd-border-strong);
+  border-radius: var(--jd-radius-md);
+  background: var(--jd-surface);
+  color: var(--jd-primary);
+  font: inherit;
+  font-size: .86rem;
+  cursor: pointer;
+}
+#jd-public-discussion .jd-discussion-action:hover { background: var(--jd-surface-hover); }
+#jd-public-discussion .jd-discussion-action:disabled { opacity: .6; cursor: wait; }
+#jd-public-discussion .jd-discussion-add { margin: .1rem 0 1.25rem; }
+#jd-public-discussion .jd-discussion-reply-action { margin: .25rem 0 .5rem; }
+#jd-public-discussion .jd-discussion-composer-host { min-width: 0; margin: .5rem 0 1.25rem; }
+#jd-public-discussion .jd-discussion-composer {
+  display: grid;
+  gap: .5rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--jd-border);
+  border-radius: var(--jd-radius-md);
+  background: var(--jd-surface-soft);
+}
+#jd-public-discussion .jd-discussion-composer label { color: var(--jd-heading); font-weight: 650; }
+#jd-public-discussion .jd-discussion-input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: .55rem .65rem;
+  border: 1px solid var(--jd-border-strong);
+  border-radius: var(--jd-radius-sm);
+  background: var(--jd-surface);
+  color: var(--jd-text);
+  font: inherit;
+}
+#jd-public-discussion textarea.jd-discussion-input { resize: vertical; }
+#jd-public-discussion .jd-discussion-input[aria-invalid='true'] { border-color: var(--jd-primary); }
+#jd-public-discussion .jd-discussion-field-error:not(:empty),
+#jd-public-discussion .jd-discussion-form-status:not(:empty) { margin: 0; }
+#jd-public-discussion .jd-discussion-field-error { color: var(--jd-primary); }
+#jd-public-discussion .jd-discussion-identity { margin: 0 0 .35rem; color: var(--jd-text-soft); }
+#jd-public-discussion .jd-discussion-turnstile { min-width: 0; min-height: 65px; overflow: hidden; }
+#jd-public-discussion .jd-discussion-composer-actions { display: flex; flex-wrap: wrap; gap: .55rem; }
+#jd-public-discussion .jd-discussion-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  clip-path: inset(50%);
+  pointer-events: none;
+}
+#jd-public-discussion .jd-discussion-action:focus-visible,
+#jd-public-discussion .jd-discussion-input:focus-visible {
+  outline: 2px solid var(--jd-primary);
+  outline-offset: 2px;
+}
+#jd-public-discussion .jd-discussion-versions { margin-top: 1.8rem; }
+#jd-public-discussion .jd-discussion-versions h3 {
+  margin: 0 0 .7rem;
+  color: var(--jd-heading);
+  font-size: 1rem;
+  font-weight: 650;
+}
+#jd-public-discussion .jd-discussion-version-buttons { display: flex; flex-wrap: wrap; gap: .55rem; }
+#jd-public-discussion .jd-discussion-version-buttons [aria-pressed='true'] {
+  border-color: var(--jd-primary);
+  background: var(--jd-primary-soft);
+  color: var(--jd-heading);
+  font-weight: 650;
+}
+@media (min-width: 768px) and (max-width: 1099.98px) {
+  #jd-public-discussion { width: min(100%, 960px); }
+}
+@media (max-width: 767.98px) {
+  #jd-public-discussion { padding-inline: .85rem; }
+  #jd-public-discussion .jd-discussion-replies { margin-left: 0; padding-left: .7rem; }
+}
+
+/* Local scope extension: independent persistent tree section and hub entry. */
+#jd-public-discussion .jd-discussion-heading { display:flex; align-items:baseline; justify-content:space-between; gap:.6rem 1rem; flex-wrap:wrap; }
+#jd-public-discussion .jd-discussion-heading h2 { flex:1 0 auto; min-width:0; }
+#jd-public-discussion .jd-discussion-refresh { flex:none; }
+#jd-public-discussion .jd-discussion-hub-link { font-size:.86rem; }
+#jd-public-discussion .jd-discussion-persistent { margin:1.3rem 0 1.7rem; }
+#jd-public-discussion .jd-discussion-persistent[hidden] { display:none!important; }
+#jd-public-discussion .jd-discussion-persistent h3 { font-size:1.12rem; margin-bottom:.3rem; }
+#jd-public-discussion [id^='jd-comment-'] { scroll-margin-top:6rem; }
+
+/* Read-only hub uses this guide's publication shell and typography. */
+#jd-discussion-hub select, #jd-discussion-hub button { font:inherit;min-height:44px;padding:.5rem .75rem;border:1px solid var(--jd-border);border-radius:6px;background:var(--jd-surface);color:var(--jd-text); }
+#jd-discussion-hub .filters {
+  display:grid;grid-template-columns:minmax(0,14rem) minmax(0,14rem) auto;
+  align-items:end;justify-content:start;gap:.9rem 1rem;
+  margin:1.4rem 0 1rem;padding:1rem;
+  border:1px solid var(--jd-border);border-radius:10px;
+  background:var(--jd-surface-soft,var(--jd-surface));
+}
+#jd-discussion-hub .filters label { display:grid;gap:.4rem;min-width:0; }
+#jd-discussion-hub .filter-label { color:var(--jd-text-soft);font-size:.8rem;font-weight:600;line-height:1.3;letter-spacing:.015em; }
+#jd-discussion-hub .filter-control { display:block;position:relative;min-width:0;color:var(--jd-text-soft); }
+#jd-discussion-hub .filter-control::after { content:"";position:absolute;right:1rem;top:17px;width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);pointer-events:none; }
+#jd-discussion-hub .filters select {
+  -webkit-appearance:none;appearance:none;display:block;width:100%;min-width:0;
+  box-sizing:border-box;height:44px;min-height:44px;padding:0 2.4rem 0 .8rem;
+  border:1px solid var(--jd-border-strong,var(--jd-border));border-radius:8px;
+  background:var(--jd-surface);color:var(--jd-text);font:inherit;font-size:.94rem;line-height:1.3;cursor:pointer;
+}
+#jd-discussion-hub .filter-control[data-active='true'] { color:var(--jd-primary); }
+#jd-discussion-hub .filter-control[data-active='true'] select { border-color:var(--jd-primary);background:var(--jd-primary-soft);color:var(--jd-heading);font-weight:600; }
+#jd-discussion-hub .filters #refresh { display:inline-flex;align-items:center;justify-content:center;gap:.45rem;height:44px;box-sizing:border-box;padding:0 .9rem;border-radius:8px;background:transparent;font-size:.9rem;line-height:1.3;cursor:pointer; }
+#jd-discussion-hub .refresh-icon { width:16px;height:16px;flex:none; }
+#jd-discussion-hub .filters select:focus-visible, #jd-discussion-hub .filters button:focus-visible { outline:2px solid var(--jd-primary);outline-offset:3px; }
+#jd-discussion-hub .filters select:disabled, #jd-discussion-hub .filters button:disabled { opacity:.6;cursor:wait; }
+@media(hover:hover) { #jd-discussion-hub .filters select:not(:disabled):hover, #jd-discussion-hub .filters button:not(:disabled):hover { border-color:var(--jd-primary); } }
+#jd-discussion-hub .card { padding:1.1rem 0;border:0;border-top:1px solid var(--jd-border);background:transparent;border-radius:0;overflow-wrap:anywhere; }
+#jd-discussion-hub .meta { display:flex;flex-wrap:wrap;gap:.5rem;font-size:.85rem; }
+#jd-discussion-hub .summary { white-space:pre-wrap; }
+#jd-discussion-hub h1 { display:none; }
+#jd-discussion-hub h2 { font-size:1.15rem;margin:.5rem 0; }
+#jd-discussion-hub [hidden] { display:none!important; }
+#jd-discussion-hub #state { min-height:1.5rem; }
+.jd-discussions-entry { margin-top:2rem;padding-top:1rem;border-top:1px solid var(--jd-border); }
+@media(max-width:640px) {
+  #jd-discussion-hub .filters { grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.85rem;padding:.85rem; }
+  #jd-discussion-hub .filters #refresh { grid-column:1/-1;justify-self:end; }
+}
+@media(max-width:480px) { #jd-discussion-hub .filters { grid-template-columns:minmax(0,1fr); } }
+
+/* The publication title block already displays this page description. */
+#jd-discussion-hub #description { display:none; }
+
+/* Keep mobile comment actions reachable while the fixed guide control is visible. */
+@media (max-width: 767.98px) {
+  body:has(#jd-public-discussion .jd-discussion-composer-host:not([hidden])) #quarto-back-to-top {
+    visibility: hidden !important;
+    pointer-events: none;
+  }
+}
+
+/* Compact comment toolbar; the real reaction group remains a focusable pending host. */
+#jd-public-discussion .jd-discussion-comment { padding:.85rem 0 .9rem; }
+#jd-public-discussion .jd-discussion-reply { padding:.15rem 0 .65rem; }
+#jd-public-discussion .jd-discussion-body { margin-bottom:.35rem; }
+#jd-public-discussion .jd-discussion-replies { margin-top:.65rem; }
+#jd-public-discussion .jd-discussion-actions { gap:.25rem; margin:.1rem 0 .3rem; }
+#jd-public-discussion .jd-discussion-reactions { display:inline-flex; align-items:center; flex-wrap:wrap; gap:.25rem; min-width:0; max-width:100%; margin:0; }
+#jd-public-discussion :is(.jd-discussion-reaction-chips,.jd-discussion-reaction-menu) { display:flex; align-items:center; flex-wrap:wrap; gap:.25rem; max-width:100%; }
+#jd-public-discussion .jd-discussion-reaction-menu { position:fixed; z-index:1100; left:0; top:0; margin:0; padding:.4rem; border:1px solid var(--jd-border); border-radius:var(--jd-radius-md); width:max-content; max-width:calc(100vw - 16px); box-sizing:border-box; background:var(--jd-surface); box-shadow:0 3px 12px rgba(0,0,0,.12); }
+#jd-public-discussion .jd-discussion-reaction-menu[hidden] { display:none!important; }
+#jd-public-discussion :is(.jd-discussion-reaction,.jd-discussion-reaction-add,.jd-discussion-reaction-retry) { min-height:2.25rem; min-width:2.25rem; padding:.3rem .5rem; border:1px solid var(--jd-border); border-radius:var(--jd-radius-md); background:var(--jd-surface); color:var(--jd-text); font:inherit; font-size:.84rem; cursor:pointer; }
+#jd-public-discussion .jd-discussion-actions :is(.jd-discussion-reply-action,.jd-discussion-report-action) { min-height:2.25rem; padding:.3rem .55rem; font-size:.84rem; }
+#jd-public-discussion .jd-discussion-reaction[aria-pressed='true'] { border-color:var(--jd-primary); background:var(--jd-primary-soft); }
+#jd-public-discussion :is(.jd-discussion-reaction,.jd-discussion-reaction-add,.jd-discussion-reaction-retry):disabled { opacity:.6; cursor:default; }
+#jd-public-discussion :is(.jd-discussion-reactions,.jd-discussion-reaction,.jd-discussion-reaction-add,.jd-discussion-reaction-retry):focus-visible { outline:2px solid var(--jd-primary); outline-offset:2px; }
+#jd-public-discussion .jd-discussion-reaction-status { display:flex; flex-wrap:wrap; align-items:center; gap:.3rem .6rem; flex-basis:100%; font-size:.8rem; color:var(--jd-text-soft); overflow-wrap:anywhere; }
+#jd-public-discussion .jd-discussion-reaction-status:empty { display:none; }
+@media (max-width:767.98px), (pointer:coarse) {
+  #jd-public-discussion :is(.jd-discussion-reaction,.jd-discussion-reaction-add,.jd-discussion-reaction-retry),
+  #jd-public-discussion .jd-discussion-actions :is(.jd-discussion-reply-action,.jd-discussion-report-action) { min-height:44px; min-width:44px; }
+}
+
+/* Optional private email updates: limited to composer and posted-result cards. */
+#jd-public-discussion .jd-discussion-subscription-choice { margin:.7rem 0; }
+#jd-public-discussion .jd-discussion-subscription-opt-label { display:flex; align-items:center; gap:.55rem; min-height:44px; font-weight:normal; }
+#jd-public-discussion .jd-discussion-subscription-opt-in { flex:none; width:20px; height:20px; accent-color:var(--jd-primary); }
+#jd-public-discussion .jd-discussion-subscription-help { font-size:.82rem; color:var(--jd-text-soft); margin:.3rem 0; }
+#jd-public-discussion .jd-discussion-subscription-result { margin:.6rem 0; padding:.75rem; border:1px solid var(--jd-border); border-radius:var(--jd-radius-md); overflow-wrap:anywhere; }
+#jd-public-discussion .jd-discussion-subscription-result h3 { font-size:1rem; margin:0 0 .35rem; }
+#jd-public-discussion .jd-discussion-subscription-status { margin:.35rem 0; }
+#jd-public-discussion .jd-discussion-subscription-controls { display:flex; flex-wrap:wrap; gap:.4rem; }
+#jd-public-discussion .jd-discussion-subscription-controls button { min-height:44px; max-width:100%; white-space:normal; }
+#jd-public-discussion .jd-discussion-subscription-result input { max-width:100%; min-width:0; box-sizing:border-box; }
+#jd-public-discussion :is(.jd-discussion-subscription-choice,.jd-discussion-subscription-email-label,.jd-discussion-subscription-email,.jd-discussion-subscription-correction)[hidden] { display:none!important; }

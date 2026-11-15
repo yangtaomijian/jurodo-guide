@@ -1,0 +1,203 @@
+<!-- Host-selected remote transport for staging and production. -->
+<script>
+(() => {
+  'use strict';
+  const environment = location.hostname === 'jurodo.carambi.com' ? 'production' : null;
+  if (!environment) return;
+  const meta = name => document.querySelector(`meta[name="${name}"]`)?.content ?? '';
+  if (meta('jd-discussion-environment') !== environment) return;
+  const origin = meta('jd-discussion-api');
+  const turnstileSitekey = meta('jd-discussion-turnstile-sitekey');
+  const expectedApiHost = `discussion${environment === 'staging' ? '-staging' : ''}.carambi.com`;
+  if (origin !== `https://${expectedApiHost}` || !/^0x[A-Za-z0-9]+$/.test(turnstileSitekey)) return;
+  const config = Object.freeze({ origin, turnstileSitekey });
+  const endpoint = config.origin + '/v1/discussion';
+  const legacyReactionTypes = ['like', 'heart', 'smile', 'celebrate', 'thinking'];
+  function reactionTypesFor(input) {
+    if (input.reactionVersion !== undefined && input.reactionVersion !== 1 && input.reactionVersion !== 2) throw Error('INVALID_REACTION_VERSION');
+    return input.reactionVersion === 2 ? [...legacyReactionTypes, 'sad'] : legacyReactionTypes;
+  }
+  function reactionProtocol(input) {
+    reactionTypesFor(input);
+    return input.reactionVersion === undefined ? {} : { reactionVersion: input.reactionVersion };
+  }
+  const uuid = value => typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  const validReaction = (row, reactionTypes = legacyReactionTypes) => row && uuid(row.commentId) && typeof row.canReact === 'boolean' &&
+    row.counts && Object.keys(row.counts).length === reactionTypes.length && reactionTypes.every(type =>
+      Number.isSafeInteger(row.counts[type]) && row.counts[type] >= 0) && Array.isArray(row.selected) &&
+    new Set(row.selected).size === row.selected.length && row.selected.every(type => reactionTypes.includes(type));
+  async function performReactionRequest(path, payload, writing, signal) {
+    let response, data;
+    try {
+      response = await fetch(endpoint + path, { method: 'POST', mode: 'cors', credentials: 'omit', signal,
+        referrerPolicy: 'no-referrer', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
+    } catch {
+      const error = Error('REACTION_REQUEST_FAILED'); error.outcomeUnknown = writing; throw error;
+    }
+    try { data = await response.json(); } catch { /* Never expose upstream response text. */ }
+    const valid = response.status === 200 && data?.ok === true && (writing ?
+      validReaction(data.reaction, reactionTypesFor(payload)) && data.reaction.commentId === payload.commentId :
+      Array.isArray(data.reactions) && data.reactions.length === payload.commentIds.length &&
+      new Set(data.reactions.map(row => row?.commentId)).size === payload.commentIds.length &&
+      data.reactions.every(row => validReaction(row, reactionTypesFor(payload)) && payload.commentIds.includes(row.commentId)));
+    if (valid) {
+      const clean = row => ({ commentId: row.commentId, counts: { ...row.counts }, selected: [...row.selected], canReact: row.canReact });
+      return writing ? { ok: true, reaction: clean(data.reaction) } : { ok: true, reactions: data.reactions.map(clean) };
+    }
+    const error = Error('REACTION_REQUEST_FAILED');
+    error.code = response.status === 429 ? 'RATE_LIMITED' :
+      ['THREAD_LOCKED', 'NOT_REACTABLE', 'VALIDATION_FAILED'].includes(data?.code) ? data.code : 'REACTION_FAILED';
+    error.notReactable = error.code === 'THREAD_LOCKED' || error.code === 'NOT_REACTABLE' || data?.fieldErrors?.commentId === 'NOT_REACTABLE';
+    error.outcomeUnknown = writing && ![400, 401, 403, 404, 405, 409, 413, 415, 422, 423, 429].includes(response.status);
+    throw error;
+  }
+  async function reactionRequest(path, payload, writing) {
+    const controller = new AbortController(); let timer;
+    try {
+      return await Promise.race([performReactionRequest(path, payload, writing, controller.signal),
+        new Promise((resolve, reject) => { timer = setTimeout(() => {
+          controller.abort(); const error = Error('REACTION_REQUEST_FAILED');
+          error.outcomeUnknown = writing; reject(error);
+        }, 15000); })]);
+    } finally { clearTimeout(timer); }
+  }
+  const validSubscriptionExpiry = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value) &&
+    Number.isFinite(Date.parse(value)) && new Date(value).toISOString() === value;
+  const subscriptionStates = ['not_requested', 'verification_pending', 'verification_failed',
+    'verification_unknown', 'active', 'cancelled', 'expired'];
+  const subscriptionCodes = ['SUBSCRIPTION_UNAVAILABLE', 'SUBSCRIPTION_EMAIL_INVALID',
+    'SUBSCRIPTION_EMAIL_FIXED', 'SUBSCRIPTION_RATE_LIMITED'];
+  async function subscriptionRequest(path, input, writing) {
+    const payload = { commentId: input.commentId, pageKey: input.pageKey, locale: input.locale,
+      subscriptionProof: input.subscriptionProof };
+    if (writing) payload.email = input.email;
+    if (!uuid(payload.commentId) || typeof payload.pageKey !== 'string' || !payload.pageKey ||
+        !['en', 'zh-CN'].includes(payload.locale) || !/^[0-9a-f]{64}$/.test(payload.subscriptionProof) ||
+        (writing && typeof payload.email !== 'string')) throw Error('SUBSCRIPTION_INPUT_INVALID');
+    const controller = new AbortController(); let timer;
+    try {
+      return await Promise.race([(async () => {
+        let response, data;
+        try {
+          response = await fetch(config.origin + '/v1/email-subscriptions' + path, {
+            method: 'POST', mode: 'cors', credentials: 'omit', referrerPolicy: 'no-referrer',
+            signal: controller.signal, redirect: 'error', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload),
+          });
+          try { data = await response.json(); } catch { /* Keep private upstream text private. */ }
+        } catch {
+          const error = Error('SUBSCRIPTION_REQUEST_FAILED'); error.outcomeUnknown = true; throw error;
+        }
+        const row = data?.subscription;
+        if (response.status === 200 && data?.ok === true && row &&
+            subscriptionStates.includes(row.state) && typeof row.mayRetry === 'boolean' &&
+            (row.expiresAt === undefined || validSubscriptionExpiry(row.expiresAt))) {
+          return { ok: true, subscription: { state: row.state, mayRetry: row.mayRetry,
+            ...(row.expiresAt === undefined ? {} : { expiresAt: row.expiresAt }) } };
+        }
+        const error = Error('SUBSCRIPTION_REQUEST_FAILED');
+        error.code = response.status === 429 ? 'SUBSCRIPTION_RATE_LIMITED' :
+          subscriptionCodes.includes(data?.code) ? data.code : 'SUBSCRIPTION_FAILED';
+        const knownReject = response.status !== 200 && data?.ok === false && subscriptionCodes.includes(data?.code);
+        error.outcomeUnknown = !knownReject && ![400, 401, 403, 404, 405, 409, 413, 415, 422, 423, 429].includes(response.status);
+        throw error;
+      })(), new Promise((resolve, reject) => { timer = setTimeout(() => {
+        controller.abort(); const error = Error('SUBSCRIPTION_REQUEST_FAILED');
+        error.outcomeUnknown = true; reject(error);
+      }, 15000); })]);
+    } finally { clearTimeout(timer); }
+  }
+  window.__jdDiscussionRemoteTransport = Object.freeze({
+    reactionVersion: 2,
+    turnstileSitekey: config.turnstileSitekey,
+    enrollSubscription(input) { return subscriptionRequest('', input, true); },
+    readSubscriptionStatus(input) { return subscriptionRequest('/status', input, false); },
+    async readReactions(input) {
+      const payload = { ...reactionProtocol(input), pageKey: input.pageKey, locale: input.locale, commentIds: input.commentIds };
+      if (input.visitorId !== undefined) payload.visitorId = input.visitorId;
+      if (typeof payload.pageKey !== 'string' || !payload.pageKey || !['en', 'zh-CN'].includes(payload.locale) || !Array.isArray(payload.commentIds) || !payload.commentIds.length || payload.commentIds.length > 50 ||
+          !payload.commentIds.every(uuid) || new Set(payload.commentIds).size !== payload.commentIds.length ||
+          (payload.visitorId !== undefined && !/^[0-9a-f]{64}$/.test(payload.visitorId))) throw Error('REACTION_INPUT_INVALID');
+      return reactionRequest('/reactions/read', payload, false);
+    },
+    async setReaction(input) {
+      const payload = { ...reactionProtocol(input), pageKey: input.pageKey, locale: input.locale, commentId: input.commentId,
+        type: input.type, visitorId: input.visitorId, intent: input.intent };
+      if (typeof payload.pageKey !== 'string' || !payload.pageKey || !['en', 'zh-CN'].includes(payload.locale) || !uuid(payload.commentId) || !reactionTypesFor(input).includes(payload.type) ||
+          !/^[0-9a-f]{64}$/.test(payload.visitorId) || !['add', 'remove'].includes(payload.intent)) throw Error('REACTION_INPUT_INVALID');
+      return reactionRequest('/reactions', payload, true);
+    },
+    async readDiscussion(request) {
+      const url = new URL(endpoint);
+      for (const key of ['pageKey', 'locale', 'guideVersion'])
+        url.searchParams.set(key, request[key]);
+      for (const key of ['cursor', 'limit', 'section'])
+        if (request[key] !== null && request[key] !== undefined) url.searchParams.set(key, request[key]);
+      const response = await fetch(url, { method: 'GET', mode: 'cors', credentials: 'omit',
+        referrerPolicy: 'no-referrer' });
+      if (!response.ok) throw Error('DISCUSSION_READ_FAILED');
+      return response.json();
+    },
+    async readSummary(request) {
+      const url = new URL(endpoint + '/summary');
+      for (const key of ['guideVersion', 'scope', 'locale', 'cursor', 'limit'])
+        if (request[key] !== null && request[key] !== undefined && request[key] !== '') url.searchParams.set(key, request[key]);
+      const response = await fetch(url, { method: 'GET', mode: 'cors', credentials: 'omit', referrerPolicy: 'no-referrer' });
+      if (!response.ok) throw Error('DISCUSSION_READ_FAILED');
+      return response.json();
+    },
+    async postComment(input) {
+      const payload = {
+        schemaVersion: 1, pageKey: input.pageKey, locale: input.locale,
+        guideVersion: input.guideVersion, displayName: input.displayName, body: input.body,
+        pageHash: input.pageHash, parentCommentId: input.parentCommentId,
+        replyToCommentId: input.replyToCommentId ?? null,
+        turnstileToken: input.turnstileToken, honeypot: input.honeypot,
+      };
+      if (input.subscriptionProof !== undefined) payload.subscriptionProof = input.subscriptionProof;
+      let response;
+      try {
+        response = await fetch(endpoint + '/comments', {
+          method: 'POST', mode: 'cors', credentials: 'omit', referrerPolicy: 'no-referrer',
+          ...(/^[0-9a-f]{64}$/.test(input.subscriptionProof ?? '') ? { redirect: 'error' } : {}),
+          headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload),
+        });
+      } catch {
+        const error = Error('DISCUSSION_POST_FAILED');
+        error.outcomeUnknown = true;
+        throw error;
+      }
+      let data = null;
+      try { data = await response.json(); } catch { /* HTTP status remains authoritative. */ }
+      if (response.status === 201) return {
+        ok: true, httpStatus: 201, commentId: typeof data?.commentId === 'string' ? data.commentId : null,
+      };
+      const error = Error('DISCUSSION_POST_FAILED');
+      // A received rejection is safe to retry; failed/ambiguous upstream writes are not.
+      error.outcomeUnknown = ![400, 401, 403, 404, 405, 409, 413, 415, 422, 423, 429].includes(response.status);
+      error.code = typeof data?.code === 'string' ? data.code : null;
+      error.fieldErrors = data?.fieldErrors && typeof data.fieldErrors === 'object' ? data.fieldErrors : null;
+      throw error;
+    },
+    async sendFeedback(input) {
+      const payload = {
+        schemaVersion: 1, category: input.category, message: input.message,
+        contact: input.contact, guideVersion: input.guideVersion, locale: input.locale,
+        pagePath: input.pagePath, pageHash: input.pageHash,
+        viewportClass: input.viewportClass, relatedCommentId: input.relatedCommentId,
+        turnstileToken: input.turnstileToken, honeypot: input.honeypot,
+      };
+      const response = await fetch(config.origin + '/v1/feedback', {
+        method: 'POST', mode: 'cors', credentials: 'omit', referrerPolicy: 'no-referrer',
+        headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      let data = null;
+      try { data = await response.json(); } catch { /* HTTP status remains authoritative. */ }
+      if (response.status === 202) return { ok: true, httpStatus: 202 };
+      const error = Error('FEEDBACK_SEND_FAILED');
+      error.code = typeof data?.code === 'string' ? data.code : null;
+      error.fieldErrors = data?.fieldErrors && typeof data.fieldErrors === 'object' ? data.fieldErrors : null;
+      throw error;
+    },
+  });
+})();
+</script>
