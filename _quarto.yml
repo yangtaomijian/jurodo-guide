@@ -39,6 +39,9 @@ website:
     description: "按日期查阅 35 天的剧情选项与自由午休，查找结局、成就、CG 和标题页立绘的解锁方法。"
     image: /assets/social/jurodo-guide-zh.png
     image-alt: "《兽劳动》非官方玩家攻略，背景为夏日施工现场。"
+  page-footer:
+    center: |
+      <div class="jd-publication-footer"><p>非官方中文玩家攻略 · 兽劳动 1.3.0</p><div class="jd-publication-footer-links"><span>由 <a class="jd-carambi-link" href="https://carambi.com/zh/">Carambi</a> 维护</span><button class="jd-feedback-slot" type="button" disabled title="私下反馈需要启用 JavaScript">私下反馈</button><a href="#">↑ 返回顶部</a></div></div>
   search: false
   navbar:
     title: >-
@@ -90,6 +93,7 @@ format:
       - assets/guide.css
       - assets/jd-mobile-shell.css
       - assets/jd-discussion.css
+      - assets/jd-feedback.css
     include-in-header:
       - assets/jd-discussion-config.html
       - text: |
@@ -102,4 +106,5 @@ format:
       - assets/jd-discussion-runtime.html
       - assets/jd-discussion-ui.html
       - assets/jd-discussion-hub.html
+      - assets/jd-feedback-ui.html
     anchor-sections: false

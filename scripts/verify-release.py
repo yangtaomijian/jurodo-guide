@@ -35,11 +35,24 @@ for p,h in pages.items():
     expected='https://jurodo.carambi.com/'+p.relative_to(OUT).as_posix()
     if h.canonical!=[expected]:errors.append(f'canonical {p.name} {h.canonical}')
     t=p.read_text()
+    if t.count('class="jd-publication-footer"') != 1:errors.append(f'publication footer {p.name}')
+    if 'class="jd-feedback-slot"' not in t or '__jdFeedbackDialog' not in t:errors.append(f'feedback entry/dialog {p.name}')
+
     if PRIVATE_PATH.search(t):errors.append(f'private local path {p.name}')
     for bad in ('chatgpt-conversation://','../research/','../reference/','__pwDiscussion','site: \'password\''):
         if bad in t:errors.append(f'private or wrong site marker {p.name}: {bad}')
 for row in json.loads((OUT/'guide-search.json').read_text()):check(OUT/'index.html',row['href'])
 if (OUT/'CNAME').read_text().strip()!='jurodo.carambi.com':errors.append('CNAME')
 if any(p.name.endswith('fixtures.html') for p in OUT.rglob('*')):errors.append('fixtures in publication')
+runtime=(ROOT/'assets/jd-discussion-runtime.html').read_text()
+registry=json.loads(re.search(r"const pageKeys = Object.freeze\((\{.*?\})\);",runtime,re.S)[1])
+for path,key in {'/background/construction.html':'background.construction','/collectibles/timeline-completion.html':'collectibles.timeline-completion'}.items():
+    if registry.get(path)!=key:errors.append(f'missing independent discussion {path}')
+for path,key in registry.items():
+    day=re.fullmatch(r'/guide/d(\d+)(-lunch)?\.html',path)
+    if day and key!=f'guide.week-{(int(day[1])-1)//7+1}':errors.append(f'weekly discussion changed {path}')
+for path in ['/index.html','/','/guide/index.html','/guide/lunch-calendar.html','/discussions.html']:
+    if path in registry:errors.append(f'unexpected discussion {path}')
+if len(set(registry.values()))!=13:errors.append('expected five weekly + eight topical discussion groups')
 if errors:raise SystemExit('\n'.join(errors[:30]))
 print(f'Publication checks passed: {len(pages)} pages, all local links and search targets, canonical URLs, CNAME, source boundary.')

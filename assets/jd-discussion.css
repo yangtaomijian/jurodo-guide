@@ -1,3 +1,19 @@
+/* Map discussion components to the shared guide theme in both color modes. */
+body {
+  --jd-text: var(--kt-text);
+  --jd-text-soft: var(--kt-text-muted);
+  --jd-heading: var(--kt-heading);
+  --jd-border: var(--kt-border);
+  --jd-border-strong: var(--kt-border-strong);
+  --jd-primary: var(--kt-accent);
+  --jd-primary-soft: var(--kt-accent-soft);
+  --jd-surface: var(--kt-surface);
+  --jd-surface-soft: var(--kt-surface-muted);
+  --jd-surface-hover: var(--kt-surface-panel);
+  --jd-radius-md: var(--kt-radius-md);
+  --jd-radius-sm: var(--kt-radius-sm);
+}
+
 /* Guide discussion; all selectors stay within its mount. */
 #jd-public-discussion[hidden] { display: none !important; }
 #jd-public-discussion {
@@ -281,3 +297,17 @@
 #jd-public-discussion .jd-discussion-subscription-controls button { min-height:44px; max-width:100%; white-space:normal; }
 #jd-public-discussion .jd-discussion-subscription-result input { max-width:100%; min-width:0; box-sizing:border-box; }
 #jd-public-discussion :is(.jd-discussion-subscription-choice,.jd-discussion-subscription-email-label,.jd-discussion-subscription-email,.jd-discussion-subscription-correction)[hidden] { display:none!important; }
+
+/* Publication footer follows the centered two-row DW layout. */
+footer.footer { background:var(--kt-bg); color:var(--kt-text-muted); border-top:1px solid var(--kt-border); padding:0 1rem; }
+footer.footer .nav-footer { display:flex; justify-content:center; width:min(100%,960px); margin-inline:auto; padding:1.15rem 1rem 1.35rem; background:transparent; }
+footer.footer .nav-footer-center { flex:1 1 100%; width:100%; text-align:center; }
+footer.footer .nav-footer-left, footer.footer .nav-footer-right { display:none; }
+.jd-publication-footer { display:flex; flex-direction:column; align-items:center; gap:.35rem; color:var(--kt-text-muted); font-size:.8rem; line-height:1.6; text-align:center; }
+.jd-publication-footer p { margin:0; }
+.jd-publication-footer-links { display:flex; justify-content:center; flex-wrap:wrap; gap:.2rem 1.1rem; align-items:center; }
+.jd-publication-footer a { color:var(--kt-text-muted); text-decoration:none; }
+.jd-publication-footer a:hover { color:var(--kt-link); text-decoration:underline; }
+.jd-publication-footer .jd-carambi-link { font-family:var(--kt-font-editorial); font-size:1.2em; }
+.jd-publication-footer-links a, .jd-publication-footer-links button { min-height:44px; display:inline-flex; align-items:center; }
+.jd-publication-footer a:focus-visible { outline:2px solid var(--kt-focus); outline-offset:3px; }
