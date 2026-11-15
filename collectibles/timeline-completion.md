@@ -681,12 +681,14 @@ toc: false
 
 </details>
 
-<details id="completion-d21" class="kt-read-more day-route completion-day" name="completion-day" data-day="D21" data-lookup="第三个休息日 8月17日 D21 完成度 百分比 100% 43项 补收 补漏 缺漏 漏选项">
+<details id="completion-d21" class="kt-read-more day-route completion-day" name="completion-day" data-day="D21" data-lookup="第三个休息日 8月17日 D21 完成度 百分比 100% 43项 97% D21卡在97% 8月17日差3% 少一张CG 夜里上山 补收 补漏 缺漏 漏选项">
 <summary><span class="lookup-name">D21 · 第三个休息日</span> · 43 项</summary>
 
 ::: {.day-route-content}
 
-**43 项。** 斗次郎避雨时的成就要先看完正式片尾。熊手长椅的「违抗因果」要先取得[反抗因果之人](achievements.md#a4012){.achievement-ref}。先把各日的登记数合计补到 600 项，开场选「作为读物的故事」或「作为性处理的工具」时只需 500 项，达标后打开时间线领取。夜里上山另从「从回家开始」选「选斗次郎」。
+**43 项。卡在 97% 时，先查[夜里上山](../guide/d21.md#night-mountain)。** 42／43 项会显示 97%。选「从回家开始」进入，洗完澡后选「选斗次郎」，继续读到山中 CG 和[成就通知](achievements.md#a2099){.achievement-ref}。这一项已登记的话，展开下方清单逐项核对。
+
+斗次郎避雨时的成就要先看完正式片尾。熊手长椅的「违抗因果」要先取得[反抗因果之人](achievements.md#a4012){.achievement-ref}。先把各日的登记数合计补到 600 项，开场选「作为读物的故事」或「作为性处理的工具」时只需 500 项，达标后打开时间线领取。
 
 <details id="completion-d21-checklist" class="kt-read-more">
 <summary>按入口核对 43 项</summary>

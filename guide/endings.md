@@ -14,9 +14,15 @@ title: "结局总览"
 
 ## D35 主线结局 {#main-endings data-lookup="结局大全 大结局 普通结局 入职 伴侣 孩子 后日谈"}
 
-入职和三条普通伴侣结局可在首周目走到，两条孩子线要在通关后补。想换结局，先在 [D34「从选择开始」](d34.md#companion)确认伴侣或改选同行，再进 [D35「尾声」](d35.md#epilogue)。字幕结束后继续确认到成就通知，再读到返回标题以保存。[D34 回跳改选](d34.md#change-companion)列出了会撤掉的伴侣与孩子约定。以前登记的片尾、回放和购买记录会保留。
+入职和三条普通伴侣结局可在首周目走到，两条孩子线要在通关后补。走完片尾字幕后，继续确认到成就通知，再读到返回标题以保存。
 
-入职和三条共同生活的完整片尾都从 [D35「尾声」补看](../collectibles/gallery.md#cg-d35-ordinary-credits){.gallery-ref}。文治、斗次郎的孩子结局各有一条包含片尾的独立回放。
+::: {#revisit-ending data-lookup="换线会保留什么 换线后还能看原来的结局吗 换线会把原结局顶掉吗 换路线 换伴侣 覆盖结局 顶掉结局 重看原结局"}
+[**换线后还能看原来的结局吗？**]{.lookup-name}　已登记的片尾成就、图库回放和买过的选项都会保留。D35 按当前伴侣和孩子约定分流。换同行人或改选伴侣题时，[D34 改选表](d34.md#change-companion)可查会撤掉哪些状态。
+
+重看[普通结局的完整片尾](../collectibles/gallery.md#cg-d35-ordinary-credits){.gallery-ref}，先回 [D34「从选择开始」](d34.md#companion)重新确认对应伴侣。想补入职就改到无伴侣。两种都从 [D35「尾声」](d35.md#epilogue)重走。带着孩子约定时，可以[改回普通共同生活](d35.md#change-child-decision)。已收的两条孩子结局可从图库重播，回放包含完整片尾。
+:::
+
+**后日谈从哪里进？**　确认伴侣后，选 [D35「尾声」](d35.md#epilogue)，从毕业读过见家长，继续到 [4 月 1 日的新生活](d35.md#new-life)。想直接看已开放的共同生活段，可用新生活一节里的图库回放。
 
 <details id="employment-ending" class="kt-read-more day-route" data-day="D35" data-lookup="与兽人共事的人生 狮子堂建设入职 无伴侣 #3493">
 <summary><span class="lookup-name">与兽人共事的人生</span> · D35 入职 · 0 GP</summary>

@@ -1140,7 +1140,7 @@ subtitle: "1.3.0 · 共 67 个回放"
 
 </details>
 
-<details id="cg-d7-surfing" class="kt-read-more gallery-entry" data-day="D7" data-lookup="冲浪图 海浪 海边 CG 插图 从时间线补看">
+<details id="cg-d7-surfing" class="kt-read-more gallery-entry" data-day="D7" data-lookup="斗次冲浪 斗次冲浪是哪天 冲浪图 海浪 海边 CG 插图 从时间线补看">
 <summary><span class="lookup-name">斗次郎冲浪</span> <small>D7 · 从时间线补看</small></summary>
 
 ::: {.gallery-body}
