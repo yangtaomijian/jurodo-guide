@@ -1,58 +1,34 @@
-# 兽劳动 · 非官方中文玩家攻略
+# 兽劳动 中文玩家攻略
 
-《兽劳动》（獣労働）1.3.0 中文文字攻略。按游戏日期整理剧情选择、自由午休、结局、时间线、GP、成就及图库。
+[阅读中文攻略](https://jurodo.carambi.com/)
 
-计划正式地址：<https://jurodo.carambi.com>。当前为首次发布候选，尚未部署。
+《兽劳动》（獣労働）由舵丸创作、雲天堂发行。本项目是面向游戏 **1.3.0** 的非官方中文玩家攻略，由 [Carambi](https://carambi.com/zh/)（[@yangtaomijian](https://github.com/yangtaomijian)）整理维护。
 
-## 本地构建
+## 从哪里开始
 
-需要 Quarto **1.9.38**、Python 3；无需执行游戏。
+- **推进剧情：** 从[日期目录](https://jurodo.carambi.com/guide/index.html)找到当前一天，或查看[午休日历](https://jurodo.carambi.com/guide/lunch-calendar.html)。
+- **补齐收集：** 查[结局](https://jurodo.carambi.com/guide/endings.html)、[成就](https://jurodo.carambi.com/collectibles/achievements.html)和[图库](https://jurodo.carambi.com/collectibles/gallery.html)的条件与补救方法。
+- **了解机制：** 查看 [GP](https://jurodo.carambi.com/mechanics/gp.html) 与[时间线](https://jurodo.carambi.com/mechanics/timeline.html)，或用站内搜索查找日期、选项和条目名称。
 
-```sh
-quarto render
-python3 -m http.server 8427 --directory _site
-```
+## 收录内容
 
-`quarto render` 自动重建搜索索引并检查产物链接、锚点、正式地址和公开文件边界。生成目录 `_site/` 不提交。正式发布采用 GitHub Pages Actions，主分支为 `main`。
+- 暑假 35 天的剧情选择与自由午休
+- 各结局条件及两篇番外
+- GP 获取、消费与时间线回跳
+- 成就、图库及标题页立绘的解锁方法
 
-## 文件结构
+## 阅读前
 
-- `index.md`：首页和阅读入口。
-- `guide/`：D1–D35、自由午休、结局及番外。
-- `mechanics/`：时间线和 GP。
-- `collectibles/`：成就、标题立绘及图库。
-- `discussions.md`：全站讨论。
-- `assets/`：本站样式、字体、搜索和评论客户端。
-- `scripts/`：搜索生成与发布门禁。
+**本攻略包含剧情与结局剧透。** 第一次玩，建议只查看当前日期和需要的条目。攻略以 **1.3.0** 为准，后续游戏版本的选择、条件或收集内容可能不同。
 
-公开仓库仅收录本目录。原游戏、存档、完整脚本、研究记录、实机测试素材和本机路径不属于发布内容。保留现有中文主页，不含英文镜像和 AI 问答。
+## 官方入口与关于本站
 
-## 评论
+[兽劳动官网 — 游戏介绍、购买与更新](https://www.untendo.com/jurodo)
 
-评论使用 Carambi 共享服务，独立站点标识 `jurodo`、版本 `1.3.0`、中文语言 `zh-CN`。每日剧情与自由午休按游戏日历合并为五个周讨论，使用稳定键 `guide.week-1` 至 `guide.week-5`，不与其他攻略站混用。结局、番外、成就、图库、GP、时间线各保留独立讨论，共11个主题。首页、日期目录、午休日历及讨论汇总页不生成评论串。
+本站为玩家整理的非官方攻略，与游戏作者及发行方没有隶属关系。游戏、角色及原始素材的相关权利归原权利方所有。
 
-| 讨论 | 日期与页范围 |
-| --- | --- |
-| 第1周 | 7月28日–8月3日，D1–D7及相应午休 |
-| 第2周 | 8月4日–8月10日，D8–D14及相应午休 |
-| 第3周 | 8月11日–8月17日，D15–D21及相应午休 |
-| 第4周 | 8月18日–8月24日，D22–D28及相应午休 |
-| 第5周 | 8月25日–8月31日，D29–D35及相应午休 |
+## 讨论与反馈
 
-分周沿用攻略日期目录中的周一至周日，不代表游戏章节名称。周内各页看到同一讨论，可能包含本周后续剧情。根评论保留实际来源日页与段落；共享评论深链落到该周首日，来源链接再准确定位原页。
+正文攻略页底部提供**公开讨论区**。每日剧情与午休按周共享讨论，可能涉及同周后续剧情；[全站讨论](https://jurodo.carambi.com/discussions.html)汇总各页留言。
 
-生产 API 为 `https://discussion.carambi.com`。服务端站点注册及 Turnstile 新域名配置须在正式启用前完成。localhost 默认不连接生产评论；隔离测试使用本地测试适配器。
-
-## 剧透与来源
-
-这是包含完整剧情走法的攻略，首页及具体章节提示剧透，部分条目需主动展开。折叠只用于阅读体验，不是访问控制；完整文字和搜索索引均可公开读取。
-
-游戏由舵丸创作、雲天堂发行。游戏版权属于权利方；本站为独立玩家整理，不是官方站点，不提供游戏本体、原始美术素材或完整脚本。
-
-- [游戏官网](https://www.untendo.com/jurodo)
-- [官方 FAQ](https://www.untendo.com/support)
-- [二创指南](https://www.untendo.com/fan-creation-guidelines)
-
-## 发布
-
-首次发布需维护者批准创建公开仓库、初始提交、推送、GitHub Pages、域名与评论后端变更。README 中的候选状态仅在真实部署验收后更新。CI只部署 `_site/`；私有研究目录不放入仓库。
+发现攻略错误、表述不清、链接或页面问题，可以在相关页面留言。如站内讨论无法正常使用，或问题涉及仓库本身，也可以使用 [GitHub Issues](https://github.com/yangtaomijian/jurodo-guide/issues)。
