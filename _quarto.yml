@@ -5,6 +5,7 @@ project:
     - index.md
     - discussions.md
     - guide/*.md
+    - background/construction.md
     - mechanics/timeline.md
     - mechanics/gp.md
     - collectibles/achievements.md
@@ -63,6 +64,8 @@ website:
             href: mechanics/timeline.md
           - text: GP
             href: mechanics/gp.md
+      - text: 背景
+        href: background/construction.md
 format:
   html:
     toc: true

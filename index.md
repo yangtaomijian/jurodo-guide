@@ -53,6 +53,10 @@ toc-location: right
 [[GP]{.home-link-title} [查奖励、功能购买和全收集预算。]{.home-link-note}](mechanics/gp.md)
 :::
 
+## 游戏背景 {#game-background}
+
+[《兽劳动》里的工地](background/construction.md) · 无剧透。看主角做的是什么工种，文治为什么要给钢筋工留位置，鹞鹰又为什么在台风前收网。
+
 ## 版本与用语 {#guide-version data-lookup="精翻 官方汉化 翻译 用语 版本说明"}
 
 攻略对应公开发行的 **1.3.0**。游戏选项、时间线时段、成就和图库标题沿用官方简体中文，正文参考非官方精翻补丁。搜索可用官方名称或已收录的精翻别名，查某天时可以加上天数，例如「D2 值班室」。
