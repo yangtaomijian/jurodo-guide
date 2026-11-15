@@ -1,6 +1,13 @@
 ---
 title: "D2 午休"
 subtitle: "7月29日（二） · 劳动"
+description: "《兽劳动》D2（7月29日）自由午休攻略：查找值班室、材料存放处、大门前的选择、前置与回跳入口。"
+hide-description: true
+pagetitle: "D2 午休地点与选项攻略"
+open-graph:
+  title: "D2 午休地点与选项攻略 – 兽劳动"
+twitter-card:
+  title: "D2 午休地点与选项攻略 – 兽劳动"
 ---
 
 ::: {.day-pager aria-label="页首切换午休" role="navigation" data-page-lookup="从午休开始"}

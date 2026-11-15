@@ -1,5 +1,7 @@
 ---
 title: "GP"
+description: "查阅《兽劳动》的GP入账、消费和解锁规则，核对开场档位、时间线与图库所需点数。"
+hide-description: true
 ---
 
 ## 手头的钱够不够 {#balance}

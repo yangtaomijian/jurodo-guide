@@ -1,6 +1,13 @@
 ---
 title: "D8 午休"
 subtitle: "8月4日（一） · 兽人的誓言"
+description: "《兽劳动》D8（8月4日）自由午休攻略：查找厕所、事务所、加工场、仓库的选择、前置与回跳入口。"
+hide-description: true
+pagetitle: "D8 午休地点与选项攻略"
+open-graph:
+  title: "D8 午休地点与选项攻略 – 兽劳动"
+twitter-card:
+  title: "D8 午休地点与选项攻略 – 兽劳动"
 ---
 
 ::: {.day-pager aria-label="页首切换午休" role="navigation" data-page-lookup="从午休开始"}

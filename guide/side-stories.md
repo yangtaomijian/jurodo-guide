@@ -1,5 +1,7 @@
 ---
 title: "番外"
+description: "说明《兽劳动》两篇番外的开启、回看与补收方式，并提供封锁后的访问恢复步骤。"
+hide-description: true
 ---
 
 ::: {.day-stages aria-label="番外目录" role="navigation"}

@@ -1,6 +1,13 @@
 ---
 title: "D13 午休"
 subtitle: "8月9日（六） · 獠牙"
+description: "《兽劳动》D13（8月9日）自由午休攻略：查找厕所、大门前、卡车前的选择、前置与回跳入口。"
+hide-description: true
+pagetitle: "D13 午休地点与选项攻略"
+open-graph:
+  title: "D13 午休地点与选项攻略 – 兽劳动"
+twitter-card:
+  title: "D13 午休地点与选项攻略 – 兽劳动"
 ---
 
 ::: {.day-pager aria-label="页首切换午休" role="navigation" data-page-lookup="从午休开始"}

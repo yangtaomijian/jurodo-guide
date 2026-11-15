@@ -1,5 +1,7 @@
 ---
 title: "结局总览"
+description: "整理《兽劳动》的主线结局、提前片尾和Game Over，按路线查找条件及回跳入口。"
+hide-description: true
 ---
 
 ::: {.day-stages aria-label="结局目录" role="navigation" data-page-lookup="结局 结局大全"}

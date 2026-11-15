@@ -2,6 +2,8 @@
 title: "日期"
 toc: false
 toc-location: right
+description: "按五周查找《兽劳动》D1至D35的日期攻略，直接进入当天选项或番外页面。"
+hide-description: true
 ---
 
 ::: {.guide-jumps aria-label="日期页导航" role="navigation"}

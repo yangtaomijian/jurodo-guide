@@ -1,6 +1,8 @@
 ---
 title: "成就"
 subtitle: "1.3.0 · 共 134 项"
+description: "按周和日期查找《兽劳动》的成就，查看获得条件、前置选择和时间线回跳入口。"
+hide-description: true
 ---
 
 ::: {.day-stages aria-label="成就目录" role="navigation" data-page-lookup="全成就 成就大全 成就列表"}

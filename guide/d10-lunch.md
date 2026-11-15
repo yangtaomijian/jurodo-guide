@@ -1,6 +1,13 @@
 ---
 title: "D10 午休"
 subtitle: "8月6日（三） · 萌芽"
+description: "《兽劳动》D10（8月6日）自由午休攻略：查找现场上层、现场下层、厕所、材料存放处、大门前的选择、前置与回跳入口。"
+hide-description: true
+pagetitle: "D10 午休地点与选项攻略"
+open-graph:
+  title: "D10 午休地点与选项攻略 – 兽劳动"
+twitter-card:
+  title: "D10 午休地点与选项攻略 – 兽劳动"
 ---
 
 ::: {.day-pager aria-label="页首切换午休" role="navigation" data-page-lookup="从午休开始"}

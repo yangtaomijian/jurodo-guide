@@ -1,6 +1,13 @@
 ---
 title: "D16 午休"
 subtitle: "8月12日（二） · 暑假的通知"
+description: "《兽劳动》D16（8月12日）自由午休攻略：查找现场下层、值班室、事务所、厕所、大门前、材料存放处的选择、前置与回跳入口。"
+hide-description: true
+pagetitle: "D16 午休地点与选项攻略"
+open-graph:
+  title: "D16 午休地点与选项攻略 – 兽劳动"
+twitter-card:
+  title: "D16 午休地点与选项攻略 – 兽劳动"
 ---
 
 ::: {.day-pager aria-label="页首切换午休" role="navigation" data-page-lookup="从午休开始"}

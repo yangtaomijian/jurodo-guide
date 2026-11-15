@@ -1,6 +1,13 @@
 ---
 title: "D29 午休"
 subtitle: "8月25日（一） · 被传承的意志"
+description: "《兽劳动》D29（8月25日）自由午休攻略：查找值班室、现场上层、现场下层、事务所、厕所、大门前、材料存放处的选择、前置与回跳入口。"
+hide-description: true
+pagetitle: "D29 午休地点与选项攻略"
+open-graph:
+  title: "D29 午休地点与选项攻略 – 兽劳动"
+twitter-card:
+  title: "D29 午休地点与选项攻略 – 兽劳动"
 ---
 
 ::: {.day-pager aria-label="页首切换午休" role="navigation" data-page-lookup="从午休开始"}

@@ -1,6 +1,8 @@
 ---
 title: "图库"
 subtitle: "1.3.0 · 共 67 个回放"
+description: "按游戏内顺序查找《兽劳动》的67个图库回放，查看开放条件、补收入口和回放范围。"
+hide-description: true
 ---
 
 ::: {.day-stages aria-label="图库目录" role="navigation" data-page-lookup="回放 CG 画廊 画廊目录 CG大全 全CG 全cg"}

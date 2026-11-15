@@ -2,6 +2,8 @@
 title: "午休日历"
 toc: false
 toc-location: right
+description: "按日期和地点查找《兽劳动》的自由午休内容，查看对应角色、前置与回跳入口。"
+hide-description: true
 ---
 
 ::: {.guide-jumps aria-label="午休日历导航" role="navigation" data-page-lookup="午休 自由午休 午休地图 午休目录"}

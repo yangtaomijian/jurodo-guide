@@ -1,6 +1,13 @@
 ---
 title: "D9 午休"
 subtitle: "8月5日（二） · 誓言的代价"
+description: "《兽劳动》D9（8月5日）自由午休攻略：查找现场上层、现场下层、值班室、厕所、事务所、大门前、材料存放处的选择、前置与回跳入口。"
+hide-description: true
+pagetitle: "D9 午休地点与选项攻略"
+open-graph:
+  title: "D9 午休地点与选项攻略 – 兽劳动"
+twitter-card:
+  title: "D9 午休地点与选项攻略 – 兽劳动"
 ---
 
 ::: {.day-pager aria-label="页首切换午休" role="navigation" data-page-lookup="从午休开始"}

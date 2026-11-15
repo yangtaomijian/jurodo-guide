@@ -1,5 +1,7 @@
 ---
 title: "时间线"
+description: "说明《兽劳动》时间线的解锁、回跳、保存与完成度显示，连接逐日100%补收清单。"
+hide-description: true
 ---
 
 ::: {.guide-jumps aria-label="时间线说明入口" role="navigation"}

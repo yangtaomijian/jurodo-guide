@@ -1,6 +1,13 @@
 ---
 title: "D11 午休"
 subtitle: "8月7日（四） · 对手"
+description: "《兽劳动》D11（8月7日）自由午休攻略：查找现场上层、大门前的选择、前置与回跳入口。"
+hide-description: true
+pagetitle: "D11 午休地点与选项攻略"
+open-graph:
+  title: "D11 午休地点与选项攻略 – 兽劳动"
+twitter-card:
+  title: "D11 午休地点与选项攻略 – 兽劳动"
 ---
 
 ::: {.day-pager aria-label="页首切换午休" role="navigation" data-page-lookup="从午休开始"}

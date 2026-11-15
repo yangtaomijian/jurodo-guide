@@ -1,6 +1,13 @@
 ---
 title: "D3 午休"
 subtitle: "7月30日（三） · 人类与兽人"
+description: "《兽劳动》D3（7月30日）自由午休攻略：查找现场上层、值班室、厕所、大门前的选择、前置与回跳入口。"
+hide-description: true
+pagetitle: "D3 午休地点与选项攻略"
+open-graph:
+  title: "D3 午休地点与选项攻略 – 兽劳动"
+twitter-card:
+  title: "D3 午休地点与选项攻略 – 兽劳动"
 ---
 
 ::: {.day-pager aria-label="页首切换午休" role="navigation" data-page-lookup="从午休开始"}

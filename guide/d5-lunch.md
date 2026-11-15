@@ -1,6 +1,13 @@
 ---
 title: "D5 午休"
 subtitle: "8月1日（五） · 加工场"
+description: "《兽劳动》D5（8月1日）自由午休攻略：查找休息处、事务所、加工场、材料存放处的选择、前置与回跳入口。"
+hide-description: true
+pagetitle: "D5 午休地点与选项攻略"
+open-graph:
+  title: "D5 午休地点与选项攻略 – 兽劳动"
+twitter-card:
+  title: "D5 午休地点与选项攻略 – 兽劳动"
 ---
 
 ::: {.day-pager aria-label="页首切换午休" role="navigation" data-page-lookup="从午休开始"}

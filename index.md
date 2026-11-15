@@ -5,6 +5,11 @@ description: "按日期查阅 35 天的剧情选项与自由午休，查找结�
 body-classes: guide-home
 toc: false
 toc-location: right
+pagetitle: "1.3.0 中文攻略"
+open-graph:
+  title: "1.3.0 中文攻略 – 兽劳动"
+twitter-card:
+  title: "1.3.0 中文攻略 – 兽劳动"
 ---
 
 《兽劳动》（獣労働）是舵丸创作、雲天堂发行的兽人视觉小说。本站按游戏日期整理暑假 35 天的选择、GP 收支和后续影响，也收录两篇番外的开启与回看方式。

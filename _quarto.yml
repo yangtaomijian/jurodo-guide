@@ -31,12 +31,10 @@ website:
   site-url: https://jurodo.carambi.com
   open-graph:
     locale: zh_CN
-    description: "按日期查阅 35 天的剧情选项与自由午休，查找结局、成就、CG 和标题页立绘的解锁方法。"
     image: /assets/social/jurodo-guide-zh.png
     image-alt: "《兽劳动》非官方玩家攻略，背景为夏日施工现场。"
   twitter-card:
     card-style: summary_large_image
-    description: "按日期查阅 35 天的剧情选项与自由午休，查找结局、成就、CG 和标题页立绘的解锁方法。"
     image: /assets/social/jurodo-guide-zh.png
     image-alt: "《兽劳动》非官方玩家攻略，背景为夏日施工现场。"
   page-footer:
