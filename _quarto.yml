@@ -10,6 +10,7 @@ project:
     - mechanics/gp.md
     - collectibles/achievements.md
     - collectibles/gallery.md
+    - collectibles/timeline-completion.md
   resources:
     - assets/guide-lookup.js
     - assets/jd-mobile-shell.js
@@ -58,6 +59,8 @@ website:
             href: collectibles/achievements.md
           - text: 图库
             href: collectibles/gallery.md
+          - text: 时间线 100% 补收
+            href: collectibles/timeline-completion.md
       - text: 机制
         menu:
           - text: 时间线

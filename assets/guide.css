@@ -762,7 +762,11 @@ main.content section:target > :is(h2, h3),
 
 @media (min-width: 768px) {
   .day-index { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .completion-date-grid { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
 }
+
+.completion-date-grid { margin-bottom: 1rem; }
+.completion-day:not([open], :target, :has(:target)) { display: none; }
 
 .day-route > summary { min-height: 44px; }
 
