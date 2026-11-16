@@ -12,6 +12,8 @@ project:
     - collectibles/gallery.md
     - collectibles/timeline-completion.md
   resources:
+    - assets/jd-home.js
+    - assets/home-visual/
     - assets/guide-lookup.js
     - assets/jd-mobile-shell.js
     - assets/fonts/
