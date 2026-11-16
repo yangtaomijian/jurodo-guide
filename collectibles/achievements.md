@@ -2259,3 +2259,8 @@ hide-description: true
 :::
 
 </details>
+
+```{=html}
+<link rel="stylesheet" href="../assets/achievement-finder.css">
+<script src="../assets/achievement-finder.js"></script>
+```

@@ -1,0 +1,9 @@
+
+/* Ending summaries and route questions. Loaded only on the endings page. */
+.day-route>summary{display:block!important;position:relative;padding:16px 36px 16px 18px!important;line-height:1.5!important}
+.day-route>summary::marker{content:""}.day-route>summary::-webkit-details-marker{display:none}
+.day-route>summary::after{content:"＋";position:absolute;right:12px;top:18px;font-size:16px}.day-route[open]>summary::after{content:"−"}
+.ending-heading{display:flex;gap:8px 16px;justify-content:space-between;align-items:baseline;flex-wrap:wrap}.ending-heading .lookup-name{font-weight:650}.ending-person{font-size:.88em;font-weight:400;opacity:.8}
+.ending-meta{display:block;font-size:.88em;font-weight:400;opacity:.85;margin-top:7px;line-height:1.6}
+.ending-question{border:1px solid var(--bs-border-color,#ccbba9);border-radius:6px;padding:12px 16px;margin:12px 0}.ending-question>summary{font-weight:600;cursor:pointer;line-height:1.5}.ending-question p{margin:12px 0 0}.ending-question+details.day-route{margin-top:24px}
+@media(max-width:540px){.day-route>summary{padding:14px 32px 14px 14px!important}.ending-heading{gap:4px 10px}.ending-meta{margin-top:5px}}

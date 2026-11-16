@@ -330,3 +330,8 @@ hide-description: true
 ### 开发者的留言 {#developer-message data-lookup="开发者留言 开发者寄语 开发者的留言 开发者的话 制作者留言"}
 
 取得[「反抗因果之人」](../collectibles/achievements.md#a4012){.achievement-ref}后，打开时间线并确认解锁通知。在日期与已开放的番外后方选「开发者的留言」。这一项可以在默认版本解锁。
+
+```{=html}
+<link rel="stylesheet" href="../assets/timeline-finder.css">
+<script src="../assets/timeline-finder.js"></script>
+```

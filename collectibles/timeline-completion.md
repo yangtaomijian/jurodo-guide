@@ -4,6 +4,19 @@ description: "按日期核对《兽劳动》1.3.0 时间线的完成度、隐藏
 toc: false
 ---
 
+```{=html}
+<section class="completion-finder" aria-labelledby="finder-title">
+<h2 id="finder-title">快速查找补收条目</h2>
+<form id="completion-find-form" role="search">
+<div class="finder-query"><label for="completion-find-query">角色、地点或关键词</label><input id="completion-find-query" type="search" placeholder="例如 狸丸、D14、怀石料理" autocomplete="off"></div>
+<div class="finder-scope"><label for="completion-find-week">周次</label><select id="completion-find-week"><option value="">全部</option><option value="1">第 1 周</option><option value="2">第 2 周</option><option value="3">第 3 周</option><option value="4">第 4 周</option><option value="5">第 5 周</option></select><label for="completion-find-day">日期</label><select id="completion-find-day" disabled><option value="">全部日期</option></select><button type="submit">查找</button><button type="button" id="completion-find-reset">清空</button></div>
+</form>
+<div class="finder-shortcuts" aria-label="常用查找"><span>常查：</span><button type="button" data-find="狸丸">狸丸拜访</button><button type="button" data-find="D14">D14 条件</button><button type="button" data-find="剧情缩短">剧情缩短</button></div>
+<p id="completion-find-status" role="status" aria-live="polite">选周次后可细选日期，也可直接输入关键词。</p>
+<ul id="completion-find-results" hidden></ul>
+</section>
+```
+
 展开周次，再点要补的日期。每张卡片标有目标项数，点开可查易漏项和逐项入口。百分比栏空白时，先查[完成度显示条件](../mechanics/timeline.md#percent)。
 
 ::: {#completion-days data-page-lookup="时间线100% 日期完成度全收集 怎么到100% 百分比补收 漏选项 补漏清单 100% 完成度 补收 补漏 缺漏 时间线全收集 时间线完成度"}
@@ -1195,3 +1208,8 @@ toc: false
 </details>
 
 </details>
+
+```{=html}
+<link rel="stylesheet" href="../assets/completion-finder.css">
+<script src="../assets/completion-finder.js" defer></script>
+```

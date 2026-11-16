@@ -1631,3 +1631,8 @@ D34 正式确认文治后，从「尾声」读过毕业和回老家。母亲把�
 :::
 
 </details>
+
+```{=html}
+<link rel="stylesheet" href="../assets/gallery-finder.css">
+<script src="../assets/gallery-finder.js"></script>
+```

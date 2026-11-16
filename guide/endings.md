@@ -18,16 +18,24 @@ hide-description: true
 
 入职和三条普通伴侣结局可在首周目走到，两条孩子线要在通关后补。走完片尾字幕后，继续确认到成就通知，再读到返回标题以保存。
 
-::: {#revisit-ending data-lookup="换线会保留什么 换线后还能看原来的结局吗 换线会把原结局顶掉吗 换路线 换伴侣 覆盖结局 顶掉结局 重看原结局"}
-[**换线后还能看原来的结局吗？**]{.lookup-name}　已登记的片尾成就、图库回放和买过的选项都会保留。D35 按当前伴侣和孩子约定分流。换同行人或改选伴侣题时，[D34 改选表](d34.md#change-companion)可查会撤掉哪些状态。
+<details id="revisit-ending" class="ending-question" data-lookup="换线会保留什么 换线后还能看原来的结局吗 换线会把原结局顶掉吗 换路线 换伴侣 覆盖结局 顶掉结局 重看原结局">
+<summary><span class="lookup-name">换线后还能看原来的结局吗？</span></summary>
+
+已登记的片尾成就、图库回放和买过的选项都会保留。D35 按当前伴侣和孩子约定分流。换同行人或改选伴侣题时，[D34 改选表](d34.md#change-companion)可查会撤掉哪些状态。
 
 重看[普通结局的完整片尾](../collectibles/gallery.md#cg-d35-ordinary-credits){.gallery-ref}，先回 [D34「从选择开始」](d34.md#companion)重新确认对应伴侣。想补入职就改到无伴侣。两种都从 [D35「尾声」](d35.md#epilogue)重走。带着孩子约定时，可以[改回普通共同生活](d35.md#change-child-decision)。已收的两条孩子结局可从图库重播，回放包含完整片尾。
-:::
 
-**后日谈从哪里进？**　确认伴侣后，选 [D35「尾声」](d35.md#epilogue)，从毕业读过见家长，继续到 [4 月 1 日的新生活](d35.md#new-life)。想直接看已开放的共同生活段，可用新生活一节里的图库回放。
+</details>
+
+<details id="epilogue-entry-question" class="ending-question">
+<summary>后日谈从哪里进？</summary>
+
+确认伴侣后，选 [D35「尾声」](d35.md#epilogue)，从毕业读过见家长，继续到 [4 月 1 日的新生活](d35.md#new-life)。想直接看已开放的共同生活段，可用新生活一节里的图库回放。
+
+</details>
 
 <details id="employment-ending" class="kt-read-more day-route" data-day="D35" data-lookup="与兽人共事的人生 狮子堂建设入职 无伴侣 #3493">
-<summary><span class="lookup-name">与兽人共事的人生</span> · D35 入职 · 0 GP</summary>
+<summary><span class="ending-heading"><span class="lookup-name">与兽人共事的人生</span><span class="ending-person">入职</span></span><span class="ending-meta">D35 · 0 GP</span></summary>
 
 ::: {.day-route-content}
 
@@ -40,7 +48,7 @@ D35「尾声」开始时保持无伴侣，毕业后读到入职片尾。已有�
 </details>
 
 <details id="bunji-ending" class="kt-read-more day-route" data-day="D35" data-lookup="伴侣的远嗥 伴侣的远吠 与文治共同生活 文治普通结局 文治伴侣 #3494">
-<summary><span class="lookup-name">伴侣的远嗥</span> · D35 文治 · 80 GP</summary>
+<summary><span class="ending-heading"><span class="lookup-name">伴侣的远嗥</span><span class="ending-person">文治</span></span><span class="ending-meta">D35 · 80 GP</span></summary>
 
 ::: {.day-route-content}
 
@@ -53,7 +61,7 @@ D34「从选择开始」选「和文治一起」，再选「和文治结成伴�
 </details>
 
 <details id="tojiro-ending" class="kt-read-more day-route" data-day="D35" data-lookup="伴侣的地盘 伴侣的领地 与斗次郎共同生活 斗次郎普通结局 斗次郎伴侣 #3495">
-<summary><span class="lookup-name">伴侣的地盘</span> · D35 斗次郎 · 80 GP</summary>
+<summary><span class="ending-heading"><span class="lookup-name">伴侣的地盘</span><span class="ending-person">斗次郎</span></span><span class="ending-meta">D35 · 80 GP</span></summary>
 
 ::: {.day-route-content}
 
@@ -66,7 +74,7 @@ D34「从选择开始」选「和斗次郎一起」，再选「和斗次郎结�
 </details>
 
 <details id="kumade-ending" class="kt-read-more day-route" data-day="D35" data-lookup="两人走的兽道 两人同行的兽道 与熊手共同生活 熊手结局 熊手六项前置 282 GP 362 GP #3498">
-<summary><span class="lookup-name">两人走的兽道</span> · D35 熊手 · 六项前置和温泉共 362 GP</summary>
+<summary><span class="ending-heading"><span class="lookup-name">两人走的兽道</span><span class="ending-person">熊手</span></span><span class="ending-meta">D35 · 六项前置和温泉共 362 GP</span></summary>
 
 ::: {.day-route-content}
 
@@ -79,7 +87,7 @@ D34「从选择开始」选「和斗次郎一起」，再选「和斗次郎结�
 </details>
 
 <details id="bunji-child-ending" class="kt-read-more day-route" data-day="D35" data-lookup="与你从此走下去的兽道 与你自此同行的兽道 文治孩子结局 文治生育 孩子前置 #1892 #1991 #2194 #3496">
-<summary><span class="lookup-name">与你从此走下去的兽道</span> · D35 文治孩子线 · 80 + 120 GP · 通关后补</summary>
+<summary><span class="ending-heading"><span class="lookup-name">与你从此走下去的兽道</span><span class="ending-person">文治孩子线</span></span><span class="ending-meta">D35 · 80 + 120 GP · 通关后补</span></summary>
 
 ::: {.day-route-content}
 
@@ -92,7 +100,7 @@ D34「从选择开始」选「和斗次郎一起」，再选「和斗次郎结�
 </details>
 
 <details id="tojiro-child-ending" class="kt-read-more day-route" data-day="D35" data-lookup="与你从此走下去的兽道 与你携手同行的兽道 斗次郎孩子结局 斗次郎生育 孩子前置 #1991 #2088 #2194 #3497">
-<summary><span class="lookup-name">与你从此走下去的兽道</span> · D35 斗次郎孩子线 · 80 + 120 GP · 通关后补</summary>
+<summary><span class="ending-heading"><span class="lookup-name">与你从此走下去的兽道</span><span class="ending-person">斗次郎孩子线</span></span><span class="ending-meta">D35 · 80 + 120 GP · 通关后补</span></summary>
 
 ::: {.day-route-content}
 
@@ -111,7 +119,7 @@ D34「从选择开始」选「和斗次郎一起」，再选「和斗次郎结�
 这六条都会进入正式片尾。走完想接着推进，可用时间线回到相应日期，按条目里的补法改走当天的正常收尾。
 
 <details id="sasakichi-ending" class="kt-read-more day-route" data-day="D18" data-lookup="爱之监狱 爱的监牢 笹吉结局 秘密房间 #1800">
-<summary><span class="lookup-name">爱之监狱</span> · D18 笹吉 · 36 GP · 通关后补 · 含束缚、成人情节</summary>
+<summary><span class="ending-heading"><span class="lookup-name">爱之监狱</span><span class="ending-person">笹吉</span></span><span class="ending-meta">D18 · 36 GP · 通关后补 · 含束缚、成人情节</span></summary>
 
 ::: {.day-route-content}
 
@@ -124,7 +132,7 @@ D34「从选择开始」选「和斗次郎一起」，再选「和斗次郎结�
 </details>
 
 <details id="rejection-ending" class="kt-read-more day-route" data-day="D27" data-lookup="失恋的尽头 拒绝文治 撞见文治与监督 最早通关 #2694">
-<summary><span class="lookup-name">失恋的尽头</span> · D27 文治与监督 · 0 GP · 首周目可走 · 含成人情节</summary>
+<summary><span class="ending-heading"><span class="lookup-name">失恋的尽头</span><span class="ending-person">文治与监督</span></span><span class="ending-meta">D27 · 0 GP · 首周目可走 · 含成人情节</span></summary>
 
 ::: {.day-route-content}
 
@@ -139,7 +147,7 @@ D34「从选择开始」选「和斗次郎一起」，再选「和斗次郎结�
 </details>
 
 <details id="bunji-offering-ending" class="kt-read-more day-route" data-day="D28" data-lookup="祭夜之梦 祭典之夜的梦 文治供品结局 文治供物坏结局 #2692 #2791 #2794">
-<summary><span class="lookup-name">祭夜之梦</span> · D28 文治供物 · 0 GP · 通关后补 · 含强迫与死亡</summary>
+<summary><span class="ending-heading"><span class="lookup-name">祭夜之梦</span><span class="ending-person">文治供物</span></span><span class="ending-meta">D28 · 0 GP · 通关后补 · 含强迫与死亡</span></summary>
 
 ::: {.day-route-content}
 
@@ -152,7 +160,7 @@ D34「从选择开始」选「和斗次郎一起」，再选「和斗次郎结�
 </details>
 
 <details id="tojiro-offering-ending" class="kt-read-more day-route" data-day="D28" data-lookup="兽的食欲 野兽的食欲 斗次郎供品结局 斗次郎供物坏结局 #2792 #2796">
-<summary><span class="lookup-name">兽的食欲</span> · D28 斗次郎供物 · 54 GP · 通关后补 · 含强迫、血腥和死亡</summary>
+<summary><span class="ending-heading"><span class="lookup-name">兽的食欲</span><span class="ending-person">斗次郎供物</span></span><span class="ending-meta">D28 · 54 GP · 通关后补 · 含强迫、血腥和死亡</span></summary>
 
 ::: {.day-route-content}
 
@@ -165,7 +173,7 @@ D34「从选择开始」选「和斗次郎一起」，再选「和斗次郎结�
 </details>
 
 <details id="lost-summer-ending" class="kt-read-more day-route" data-day="D28" data-lookup="失落的夏天 遗落之夏 狮子堂建设破产 斑 兽神祭历史 #2797">
-<summary><span class="lookup-name">失落的夏天</span> · D28 独自行动 · 0 GP · 首周目可走 · 含追逐和血腥</summary>
+<summary><span class="ending-heading"><span class="lookup-name">失落的夏天</span><span class="ending-person">独自行动</span></span><span class="ending-meta">D28 · 0 GP · 首周目可走 · 含追逐和血腥</span></summary>
 
 ::: {.day-route-content}
 
@@ -178,7 +186,7 @@ D28「从选择开始」选「一个人行动」→「想看」→「有兴趣�
 </details>
 
 <details id="yukinojou-ending" class="kt-read-more day-route" data-day="D30" data-lookup="流浪之旅 雪之丞结局 私奔 与雪之丞同居 和雪之丞一起生活 #2993">
-<summary><span class="lookup-name">流浪之旅</span> · D30 雪之丞 · 80 + 24 GP · 首周目可走 · 含成人情节</summary>
+<summary><span class="ending-heading"><span class="lookup-name">流浪之旅</span><span class="ending-person">雪之丞</span></span><span class="ending-meta">D30 · 80 + 24 GP · 首周目可走 · 含成人情节</span></summary>
 
 ::: {.day-route-content}
 
@@ -195,7 +203,7 @@ D30「从午休开始」到「卡车前」。拥抱后选「可以」（80 GP）
 确认失败画面并等成就通知结束，会回到当时的选项。可以改选继续，已登记的失败成就会保留。要解锁时间线，沿主线或上面的提前片尾继续。
 
 <details id="start-game-over" class="kt-read-more day-route" data-day="D1" data-lookup="开始不了的夏天 未曾开始的夏天 面试失败 不行 恐怕不行 #90 Game Over">
-<summary><span class="lookup-name">开始不了的夏天</span> · D1 面试 · 0 GP</summary>
+<summary><span class="ending-heading"><span class="lookup-name">开始不了的夏天</span><span class="ending-person">面试</span></span><span class="ending-meta">D1 · 0 GP</span></summary>
 
 ::: {.day-route-content}
 
@@ -208,7 +216,7 @@ D30「从午休开始」到「卡车前」。拥抱后选「可以」（80 GP）
 </details>
 
 <details id="quit-game-over" class="kt-read-more day-route" data-day="D8" data-lookup="正确选择 正确的选择 辞职 辞去工作 #792 Game Over">
-<summary><span class="lookup-name">正确选择</span> · D8 辞职 · 0 GP</summary>
+<summary><span class="ending-heading"><span class="lookup-name">正确选择</span><span class="ending-person">辞职</span></span><span class="ending-meta">D8 · 0 GP</span></summary>
 
 ::: {.day-route-content}
 
@@ -221,7 +229,7 @@ D8「从下午工作开始」，社长问要不要辞职时选「辞职」。确
 </details>
 
 <details id="camp-game-over" class="kt-read-more day-route" data-day="D19" data-lookup="弱肉强食 独自去厕所 一个人去 #1895 Game Over">
-<summary><span class="lookup-name">弱肉强食</span> · D19 厕所选择 · 0 GP · 含追逐和死亡</summary>
+<summary><span class="ending-heading"><span class="lookup-name">弱肉强食</span><span class="ending-person">厕所选择</span></span><span class="ending-meta">D19 · 0 GP · 含追逐和死亡</span></summary>
 
 ::: {.day-route-content}
 
@@ -234,7 +242,7 @@ D19「从厕所选择开始」，选「一个人去」。确认后回厕所选�
 </details>
 
 <details id="leave-game-over" class="kt-read-more day-route" data-day="D26" data-lookup="人狩之夜 猎人之夜 离家出走 干脆就这样离家出走 #2593 Game Over">
-<summary><span class="lookup-name">人狩之夜</span> · D26 社宅门口 · 0 GP · 含血腥和死亡</summary>
+<summary><span class="ending-heading"><span class="lookup-name">人狩之夜</span><span class="ending-person">社宅门口</span></span><span class="ending-meta">D26 · 0 GP · 含血腥和死亡</span></summary>
 
 ::: {.day-route-content}
 
@@ -247,7 +255,7 @@ D26「从回家开始」，到社宅门口选「就这样离家」。确认后�
 </details>
 
 <details id="hunt-game-over" class="kt-read-more day-route" data-day="D28" data-lookup="人肉 人类的肉 狩猎失败 帮忙打猎 帮忙狩猎 #1992 #2790 Game Over">
-<summary><span class="lookup-name">人肉</span> · D28 狩猎邀约 · 0 GP · 含血腥和死亡</summary>
+<summary><span class="ending-heading"><span class="lookup-name">人肉</span><span class="ending-person">狩猎邀约</span></span><span class="ending-meta">D28 · 0 GP · 含血腥和死亡</span></summary>
 
 ::: {.day-route-content}
 
@@ -258,3 +266,7 @@ D26「从回家开始」，到社宅门口选「就这样离家」。确认后�
 :::
 
 </details>
+
+```{=html}
+<link rel="stylesheet" href="../assets/ending-layout.css">
+```
