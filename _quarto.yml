@@ -110,6 +110,7 @@ format:
           <link rel="icon" type="image/svg+xml" sizes="any" href="/assets/favicon.svg">
           <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
     include-after-body:
+      - assets/cloudflare-web-analytics.html
       - assets/guide-search.html
       - assets/jd-discussion-remote.html
       - assets/jd-discussion-runtime.html

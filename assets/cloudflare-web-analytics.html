@@ -1,0 +1,16 @@
+<!-- Cloudflare Web Analytics -->
+<script data-jd-analytics>
+(() => {
+  'use strict';
+  const token = '4afdc4561a7944f2a8c7615b65696173';
+  if (location.protocol !== 'https:' || location.hostname !== 'jurodo.carambi.com') return;
+  if (!/^[a-f0-9]{32}$/i.test(token)) return;
+  if (document.querySelector('script[data-cf-beacon]')) return;
+  const script = document.createElement('script');
+  script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+  script.type = 'module';
+  script.dataset.cfBeacon = JSON.stringify({ token });
+  document.head.append(script);
+})();
+</script>
+<!-- End Cloudflare Web Analytics -->
